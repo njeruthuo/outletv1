@@ -1,18 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { InitialState } from "../types";
+import { authApi } from "./login";
 
 const initialState: InitialState = {
   isLoggedIn: true,
+  token: "",
 };
 
 export const AuthSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // inc: (state) => {},
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.token = "";
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      authApi.endpoints.login.matchFulfilled,
+      (state, { payload }) => {
+        state.isLoggedIn = true;
+        state.token = payload.token;
+      }
+    );
   },
 });
 
-// export const { inc } = AuthSlice.actions;
+export const { logout } = AuthSlice.actions;
 
 export default AuthSlice.reducer;
