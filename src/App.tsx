@@ -1,9 +1,10 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Home } from "./pages/others/employee";
-import MainLayout from "./pages/others/MainLayout";
 import { SignInForm } from "./pages/auth/forms";
 import AuthLayout from "./pages/auth/AuthLayout";
+import { Toaster } from "./components/ui/toaster";
+import MainLayout from "./pages/others/MainLayout";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Sales, Stock, Reports, Home, Settings } from "./pages/others";
 
 const App = () => {
   return (
@@ -11,14 +12,19 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route element={<MainLayout />}>
-            <Route index element={<Home />} />
+            <Route index path="/" element={<Home />} />
+            <Route path="/sales/" element={<Sales />} />
+            <Route path="/stock/" element={<Stock />} />
+            <Route path="/reports/" element={<Reports />} />
+            <Route path="/settings/" element={<Settings />} />
           </Route>
 
           <Route element={<AuthLayout />}>
-            <Route path="sign-in" element={<SignInForm />} />
+            <Route path="sign-in/" element={<SignInForm />} />
           </Route>
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </React.Fragment>
   );
 };

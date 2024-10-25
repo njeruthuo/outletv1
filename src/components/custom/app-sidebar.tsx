@@ -10,33 +10,33 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Menu items.
 const items = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
     title: "Sales",
-    url: "#",
+    url: "/sales/",
     icon: Inbox,
   },
   {
     title: "Stock",
-    url: "#",
+    url: "/stock/",
     icon: Calendar,
   },
   {
     title: "Reports",
-    url: "#",
+    url: "/reports/",
     icon: Search,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings/",
     icon: Settings,
   },
 ];
@@ -45,21 +45,22 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <SidebarGroup className="ml-4 font-light text-lg">
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+        <SidebarGroup className="font-light text-white">
+          {/* <SidebarGroupLabel className="mt-3 text-black text-lg">
+            Application
+          </SidebarGroupLabel> */}
           <SidebarGroupContent>
-            <SidebarMenu className=" my-2">
+            <SidebarMenu className=" my-4">
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    {/* <Link to={item.url}>
+                <SidebarMenuItem
+                  key={item.title}
+                  className="font-semibold text-xl"
+                >
+                  <SidebarMenuButton asChild className="my-2">
+                    <Link to={item.url}>
                       <item.icon className="text-lg" />
-                      <span className="">{item.title}</span>
-                    </Link> */}
-                    <a href={item.url}>
-                      <item.icon className="text-lg" />
-                      <span className="">{item.title}</span>
-                    </a>
+                      <span className=" ">{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

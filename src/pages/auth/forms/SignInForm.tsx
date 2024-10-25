@@ -1,9 +1,12 @@
 import { z } from "zod";
-import { formSchema } from "./schemas/SignInSchema";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { formSchema } from "./schemas/SignInSchema";
+import { useLoginMutation } from "../reducers/login";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -12,11 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useLoginMutation } from "../reducers/login";
-
+// import { LoadingSpinner } from "@/utils/spinner";
+import { cn } from "@/lib/utils";
 const SignInForm = () => {
-  const [login, { isLoading, isSuccess, isError, error }] = useLoginMutation();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [login, { isLoading, isSuccess, isError }] = useLoginMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,16 +31,35 @@ const SignInForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    // console.log(isLoading, "loading...");
     try {
       // Call the login mutation
       const result = await login(values).unwrap();
-      console.log("Logged in successfully", result);
+
+      if (isSuccess) {
+        toast({
+          title: "Login success",
+          description: "You will be redirected shortly",
+        });
+        navigate("/");
+      }
+
+      return result;
     } catch (error) {
+      if (isError) {
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: "Username or password is incorrect",
+        });
+      }
+
       console.log("Failed to login", error);
     }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    // console.log(values);
+    console.log(isLoading, "loading...");
   }
   return (
     <section className="flex justify-center items-center h-full">
@@ -80,27 +103,36 @@ const SignInForm = () => {
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="shadcn" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
+
             <Button
-              className="w-full bg-custom1 hover:bg-customPale"
+              className="w-full bg-custom1 hover:bg-customPale flex"
               type="submit"
+              disabled={isLoading}
             >
-              Submit
+              {isLoading ? (
+                <>
+                  <span>
+                    {/* <LoadingSpinner className={""}/> */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="28"
+                      height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={cn("animate-spin")} // `cn` is used for combining classes dynamically
+                    >
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                    </svg>
+                  </span>
+                  <span>Sign In</span>
+                </>
+              ) : (
+                <span>Sign In</span>
+              )}
             </Button>
           </form>
         </Form>

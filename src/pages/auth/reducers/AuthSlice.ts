@@ -3,7 +3,7 @@ import { InitialState } from "../types";
 import { authApi } from "./login";
 
 const initialState: InitialState = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   token: "",
 };
 
