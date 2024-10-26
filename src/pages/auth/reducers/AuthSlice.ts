@@ -3,7 +3,8 @@ import { InitialState } from "../types";
 import { authApi } from "./login";
 
 const initialState: InitialState = {
-  isLoggedIn: false,
+  // Remember to change this to false before production.
+  isLoggedIn: true,
   token: "",
 };
 

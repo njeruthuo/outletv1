@@ -20,15 +20,16 @@ const items = [
     icon: Home,
   },
   {
-    title: "Sales",
-    url: "/sales/",
-    icon: Inbox,
-  },
-  {
     title: "Stock",
     url: "/stock/",
     icon: Calendar,
   },
+  {
+    title: "Sales",
+    url: "/sales/",
+    icon: Inbox,
+  },
+
   {
     title: "Reports",
     url: "/reports/",

@@ -4,7 +4,7 @@ import AuthLayout from "./pages/auth/AuthLayout";
 import { Toaster } from "./components/ui/toaster";
 import MainLayout from "./pages/others/MainLayout";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Sales, Stock, Reports, Home, Settings } from "./pages/others";
+import { Sales, Stock, Reports, Home, Settings } from "./pages";
 
 const App = () => {
   return (
