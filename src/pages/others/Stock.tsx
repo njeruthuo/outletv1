@@ -1,26 +1,37 @@
-import { Search } from "@/components/reusable";
-import ReusableGrid from "@/components/reusable/ReusableGrid";
-import { useGetStockItemsQuery } from "@/features/stock/stockAPI";
-import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
 import { useMemo, useState } from "react";
+import { formatDate } from "@/utils/date";
+import AddIcon from "@mui/icons-material/Add";
+import { AddStockForm } from "@/components/forms";
+import { StockColumn, StockItem } from "@/lib/types/StockItemTypes";
+import { useGetStockItemsQuery } from "@/features/stock/stockAPI";
+import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
 
-const formatDate = (input: Date) => {
-  const date = new Date(input);
-  const day = date.getDay().toString().padStart(2, "0");
-  const month = date.getMonth();
-  const year = date.getFullYear();
 
-  return `${day}-${month + 1}-${year}`;
-};
 
 const Stock = () => {
-  const { data: stockItems, error, isLoading } = useGetStockItemsQuery();
-
+  const [openStockAdd, setOpenStockAdd] = useState(false);
+  const {
+    data: stockItems,
+    // error,
+    //  isLoading
+  } = useGetStockItemsQuery([]);
   const [data, setData] = useState(stockItems);
+  const [colDefs, setColDefs] = useState<StockColumn[]>([
+    { field: "name", flex: 1 },
+    { field: "price", flex: 1 },
+    { field: "category", flex: 1 },
+    { field: "brand", flex: 1 },
+    { field: "last_updated", flex: 1 },
+    { field: "quantity", flex: 1 },
+  ]);
+
+  console.log(data, "stock items");
+
+  console.log(setData, setColDefs);
 
   const rows = useMemo(() => {
-    return data?.map((item) => ({
+    return data?.map((item: StockItem) => ({
       name: item.product.name,
       price: parseFloat(item.product.price_per_item),
       last_updated: formatDate(item.last_updated),
@@ -30,6 +41,9 @@ const Stock = () => {
     }));
   }, [data]);
 
+  function stockModalOpener() {
+    setOpenStockAdd((prev: boolean) => !prev);
+  }
 
   return (
     <section className="flex w-full ">
@@ -55,6 +69,7 @@ const Stock = () => {
             variant="contained"
             color="info"
             className="p-1 flex place-items-center"
+            onClick={stockModalOpener}
           >
             <AddIcon />
             <span className="p-1">Add stock</span>
@@ -62,9 +77,15 @@ const Stock = () => {
         </div>
 
         <div id="stock-table" className="w-full mt-4">
-          <ReusableGrid rows={rows} />
+          <ReusableGrid rows={rows} colsDefs={colDefs} />
         </div>
       </div>
+
+      <GlobalModal
+        open={openStockAdd}
+        closeFunc={() => setOpenStockAdd((prev: boolean) => !prev)}
+        children={<AddStockForm />}
+      />
     </section>
   );
 };
