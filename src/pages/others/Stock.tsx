@@ -1,13 +1,11 @@
 import { Button } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { formatDate } from "@/utils/date";
 import AddIcon from "@mui/icons-material/Add";
 import { AddStockForm } from "@/components/forms";
 import { StockColumn, StockItem } from "@/lib/types/StockItemTypes";
 import { useGetStockItemsQuery } from "@/features/stock/stockAPI";
 import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
-
-
 
 const Stock = () => {
   const [openStockAdd, setOpenStockAdd] = useState(false);
@@ -16,7 +14,15 @@ const Stock = () => {
     // error,
     //  isLoading
   } = useGetStockItemsQuery([]);
-  const [data, setData] = useState(stockItems);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (stockItems) {
+      setData(stockItems);
+    }
+  }, [stockItems]);
+
+  
   const [colDefs, setColDefs] = useState<StockColumn[]>([
     { field: "name", flex: 1 },
     { field: "price", flex: 1 },
@@ -26,7 +32,7 @@ const Stock = () => {
     { field: "quantity", flex: 1 },
   ]);
 
-  console.log(data, "stock items");
+  console.log(stockItems, "stock items");
 
   console.log(setData, setColDefs);
 
@@ -84,7 +90,11 @@ const Stock = () => {
       <GlobalModal
         open={openStockAdd}
         closeFunc={() => setOpenStockAdd((prev: boolean) => !prev)}
-        children={<AddStockForm />}
+        children={
+          <AddStockForm
+            closeModal={() => setOpenStockAdd((prev: boolean) => !prev)}
+          />
+        }
       />
     </section>
   );

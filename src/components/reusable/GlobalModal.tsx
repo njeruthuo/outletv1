@@ -1,11 +1,7 @@
 import { GlobalModalPropTypes } from "@/lib/types/GlobalModalTypes";
 import { ModalDialog, Modal, ModalClose } from "@mui/joy";
 
-const GlobalModal = ({
-  open,
-  closeFunc,
-  children,
-}: GlobalModalPropTypes) => {
+const GlobalModal = ({ open, closeFunc, children }: GlobalModalPropTypes) => {
   return (
     <Modal open={open} onClose={closeFunc}>
       <ModalDialog
@@ -17,8 +13,7 @@ const GlobalModal = ({
         aria-describedby="modal-desc"
       >
         <ModalClose />
-        {/* <Typography>{title}</Typography> */}
-        {children}
+        <div className="z-[1400]">{children}</div>
       </ModalDialog>
     </Modal>
   );

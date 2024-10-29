@@ -1,9 +1,12 @@
+import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddFormSchema } from "@/lib/types/AddFormTypes";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
+import { useAddStockMutation } from "@/features/stock/stockAPI";
 import {
   Form,
   FormControl,
@@ -20,16 +23,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CircularProgress } from "@mui/material";
 
-import { Input } from "@/components/ui/input";
+type AddStockProps = {
+  closeModal: () => void;
+};
 
-const AddStockForm = () => {
+const AddStockForm: React.FC<AddStockProps> = ({ closeModal }) => {
+  const { toast } = useToast();
+  const [addStock, { isLoading }] = useAddStockMutation();
   // 1. Define your form.
   const form = useForm<z.infer<typeof AddFormSchema>>({
     resolver: zodResolver(AddFormSchema),
     defaultValues: {
       name: "",
-      price: "",
+      price_per_item: "",
       category: "",
       brand: "",
       quantity: "",
@@ -37,11 +45,25 @@ const AddStockForm = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof AddFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof AddFormSchema>) {
+    try {
+      await addStock(values).unwrap();
+      closeModal();
+      toast({
+        variant: "default",
+        title: "Success",
+        description: "Product Added successfully",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: "An error occurred while adding stock item",
+      });
+      console.log("Failed to add stock:", error);
+    }
   }
+
   return (
     <Form {...form}>
       <h2 className="text-xl font-bold">Add Stock</h2>
@@ -62,12 +84,12 @@ const AddStockForm = () => {
           />
           <FormField
             control={form.control}
-            name="price"
+            name="price_per_item"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Price per unit</FormLabel>
                 <FormControl>
-                  <Input id="price" placeholder="e.g 200" {...field} />
+                  <Input id="price_per_item" placeholder="e.g 200" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -138,8 +160,9 @@ const AddStockForm = () => {
           />
         </div>
 
-        <Button className="z-[1400]" type="submit">
-          Add Stock
+        <Button className="bg-custom1 hover:bg-customPale" type="submit">
+          {isLoading && <CircularProgress size="sm" color="" />}
+          <span>Add Stock</span>
         </Button>
       </form>
     </Form>
