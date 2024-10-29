@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 const SignInForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [login, { isLoading, isSuccess, isError }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,41 +31,30 @@ const SignInForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(isLoading, "loading...");
     try {
-      // Call the login mutation
       const result = await login(values).unwrap();
-
-      if (isSuccess) {
-        toast({
-          title: "Login success",
-          description: "You will be redirected shortly",
-        });
-        navigate("/");
-      }
+      toast({
+        title: "Login success",
+        description: "You will be redirected shortly",
+      });
+      navigate("/");
 
       return result;
     } catch (error) {
-      if (isError) {
-        toast({
-          variant: "destructive",
-          title: "Login failed",
-          description: "Username or password is incorrect",
-        });
-      }
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: "Username or password is incorrect",
+      });
 
       console.log("Failed to login", error);
     }
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    // console.log(values);
-    console.log(isLoading, "loading...");
   }
+
   return (
     <section className="flex justify-center items-center h-full">
       <div className="w-1/2 ">
         <div className="mb-4">
-          {/* <img src="./three.png" className="h-14 w-[50%] mb-2" alt="" /> */}
           <h3 className="text-2xl font-bold">Please sign in</h3>
           <p className="mr-auto">
             Please use your email and password to sign in...

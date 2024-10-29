@@ -14,7 +14,9 @@ export default {
       },
       colors: {
         custom1: "#905C3F",
-        customPale:"#B47655",
+        danger: "#FB3640",
+        dangerPale:"#FB4B54",
+        customPale: "#B47655",
         custom2: "#073B4C",
         custom3: "#B6C8A9",
         custom4: "#998FC7",

@@ -2,18 +2,21 @@ import { Button } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { formatDate } from "@/utils/date";
 import AddIcon from "@mui/icons-material/Add";
-import { AddStockForm } from "@/components/forms";
-import { StockColumn, StockItem } from "@/lib/types/StockItemTypes";
+import { AddStockForm, UpdateStockForm } from "@/components/forms";
+import {
+  cellRendererParams,
+  StockColumn,
+  StockItem,
+  StockRow,
+} from "@/lib/types/StockItemTypes";
 import { useGetStockItemsQuery } from "@/features/stock/stockAPI";
 import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
 
 const Stock = () => {
   const [openStockAdd, setOpenStockAdd] = useState(false);
-  const {
-    data: stockItems,
-    // error,
-    //  isLoading
-  } = useGetStockItemsQuery([]);
+  const [updatePayload, setUpdatePayload] = useState<StockRow>();
+  const { data: stockItems } = useGetStockItemsQuery([]);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -22,22 +25,37 @@ const Stock = () => {
     }
   }, [stockItems]);
 
-  
+  const CustomButtonComponent = (props: cellRendererParams) => {
+    return (
+      <div
+        className="flex h-full justify-center items-center"
+        onClick={() => infoModalOpener(props)}
+      >
+        <img src="/info.svg" />
+      </div>
+    );
+  };
+
   const [colDefs, setColDefs] = useState<StockColumn[]>([
-    { field: "name", flex: 1 },
-    { field: "price", flex: 1 },
+    { field: "name", flex: 1, headerName: "Product Name" },
+    { field: "price", flex: 1, headerName: "Price per unit" },
     { field: "category", flex: 1 },
     { field: "brand", flex: 1 },
-    { field: "last_updated", flex: 1 },
+    { field: "last_updated", flex: 1, headerName: "Last Updated" },
     { field: "quantity", flex: 1 },
+    {
+      field: "info",
+      flex: 0.5,
+      headerName: "",
+      cellRenderer: CustomButtonComponent, // Note the change here
+    },
   ]);
-
-  console.log(stockItems, "stock items");
 
   console.log(setData, setColDefs);
 
   const rows = useMemo(() => {
     return data?.map((item: StockItem) => ({
+      id: item.id,
       name: item.product.name,
       price: parseFloat(item.product.price_per_item),
       last_updated: formatDate(item.last_updated),
@@ -49,6 +67,11 @@ const Stock = () => {
 
   function stockModalOpener() {
     setOpenStockAdd((prev: boolean) => !prev);
+  }
+
+  function infoModalOpener(props: cellRendererParams) {
+    setUpdatePayload(props?.data);
+    setOpenInfoModal((prev: boolean) => !prev);
   }
 
   return (
@@ -87,15 +110,30 @@ const Stock = () => {
         </div>
       </div>
 
-      <GlobalModal
-        open={openStockAdd}
-        closeFunc={() => setOpenStockAdd((prev: boolean) => !prev)}
-        children={
-          <AddStockForm
-            closeModal={() => setOpenStockAdd((prev: boolean) => !prev)}
-          />
-        }
-      />
+      {openStockAdd && (
+        <GlobalModal
+          open={openStockAdd}
+          closeFunc={() => setOpenStockAdd((prev: boolean) => !prev)}
+          children={
+            <AddStockForm
+              closeModal={() => setOpenStockAdd((prev: boolean) => !prev)}
+            />
+          }
+        />
+      )}
+
+      {openInfoModal && (
+        <GlobalModal
+          open={openInfoModal}
+          closeFunc={() => setOpenInfoModal((prev: boolean) => !prev)}
+          children={
+            <UpdateStockForm
+              closeModal={() => setOpenInfoModal((prev: boolean) => !prev)}
+              args={updatePayload}
+            />
+          }
+        />
+      )}
     </section>
   );
 };

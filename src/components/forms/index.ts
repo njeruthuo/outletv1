@@ -1,3 +1,4 @@
 import AddStockForm from "./AddStockForm";
+import UpdateStockForm from "./UpdateStockForm";
 
-export { AddStockForm };
+export { AddStockForm, UpdateStockForm };

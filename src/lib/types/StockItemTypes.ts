@@ -1,9 +1,10 @@
 export type StockItem = {
+  id?: number;
   last_updated: Date;
   product: {
     name: string;
     price_per_item: string;
-    category: "DRY FOODS" | "TOILETRIES" | "CLEANING AGENTS";
+    category: "DRYFOODS" | "TOILETRIES" | "CLEANING AGENTS";
     brand: {
       name: string;
       contact: string;
@@ -12,12 +13,19 @@ export type StockItem = {
   quantity: number;
 };
 
+export interface cellRendererParams {
+  data: StockRow;
+}
+
 export type StockColumn = {
   field: string;
   flex: number;
+  headerName?: string;
+  cellRenderer?: (params: cellRendererParams) => React.ReactElement;
 };
 
 export type StockRow = {
+  id?: number;
   name: string;
   price: string;
   quantity: number;
@@ -29,4 +37,9 @@ export type StockRow = {
 export type ReusableGridProps = {
   rows: StockRow[]; // Array of StockRow items
   colsDefs: StockColumn[]; // Array of StockColumn definitions
+};
+
+export type StockProps = {
+  closeModal: () => void;
+  args?: StockRow;
 };
