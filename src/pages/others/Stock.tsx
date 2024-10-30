@@ -1,16 +1,16 @@
 import { Button } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
 import { formatDate } from "@/utils/date";
 import AddIcon from "@mui/icons-material/Add";
+import { useEffect, useMemo, useState } from "react";
+import { ICellRendererParams } from "ag-grid-community";
 import { AddStockForm, UpdateStockForm } from "@/components/forms";
 import {
-  cellRendererParams,
-  StockColumn,
-  StockItem,
-  StockRow,
-} from "@/lib/types/StockItemTypes";
-import { useGetStockItemsQuery } from "@/features/stock/stockAPI";
+  useDeleteStockMutation,
+  useGetStockItemsQuery,
+} from "@/features/stock/stockAPI";
+import { StockColumn, StockItem, StockRow } from "@/lib/types/StockItemTypes";
 import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
+import DeleteAction from "@/components/forms/DeleteAction";
 
 const Stock = () => {
   const [openStockAdd, setOpenStockAdd] = useState(false);
@@ -25,13 +25,33 @@ const Stock = () => {
     }
   }, [stockItems]);
 
-  const CustomButtonComponent = (props: cellRendererParams) => {
+  const CustomButtonComponent = (props: ICellRendererParams) => {
     return (
       <div
         className="flex h-full justify-center items-center"
         onClick={() => infoModalOpener(props)}
       >
         <img src="/info.svg" />
+      </div>
+    );
+  };
+
+  const CustomDeleteButtonComponent = (props: ICellRendererParams) => {
+    const [deleteStock] = useDeleteStockMutation();
+    const handleDelete = async (data: ICellRendererParams) => {
+      try {
+        await deleteStock(data.data?.id).unwrap();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    return (
+      <div
+        className="flex h-full justify-center items-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <DeleteAction data={props} onConfirm={() => handleDelete(props)} />
       </div>
     );
   };
@@ -47,11 +67,19 @@ const Stock = () => {
       field: "info",
       flex: 0.5,
       headerName: "",
-      cellRenderer: CustomButtonComponent, // Note the change here
+      cellRenderer: CustomButtonComponent,
+    },
+    {
+      field: "delete",
+      flex: 0.5,
+      headerName: "",
+      cellRenderer: CustomDeleteButtonComponent,
     },
   ]);
 
-  console.log(setData, setColDefs);
+  if ("njeru " === String("njeru")) {
+    console.log(setData, setColDefs);
+  }
 
   const rows = useMemo(() => {
     return data?.map((item: StockItem) => ({
@@ -60,7 +88,7 @@ const Stock = () => {
       price: parseFloat(item.product.price_per_item),
       last_updated: formatDate(item.last_updated),
       quantity: item.quantity,
-      category: item.product.category,
+      category: item.product.category.name,
       brand: item.product.brand.name,
     }));
   }, [data]);
@@ -69,8 +97,8 @@ const Stock = () => {
     setOpenStockAdd((prev: boolean) => !prev);
   }
 
-  function infoModalOpener(props: cellRendererParams) {
-    setUpdatePayload(props?.data);
+  function infoModalOpener(props: ICellRendererParams) {
+    setUpdatePayload(props.data);
     setOpenInfoModal((prev: boolean) => !prev);
   }
 
@@ -101,7 +129,7 @@ const Stock = () => {
             onClick={stockModalOpener}
           >
             <AddIcon />
-            <span className="p-1">Add stock</span>
+            <span className="p-1">stock</span>
           </Button>
         </div>
 

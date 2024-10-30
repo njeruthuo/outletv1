@@ -25,18 +25,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { CircularProgress } from "@mui/material";
 import { StockProps } from "@/lib/types/StockItemTypes";
-import { useEffect, useState } from "react";
-import DeleteAction from "./DeleteAction";
-
+import { useEffect } from "react";
+import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
+import { useGetBrandQuery } from "@/features/stock/brandAPI";
 const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
   const { toast } = useToast();
-  const closeDeleteDialog = () => setIsDeleteDialogOpen(false);
   const [updateStock, { isLoading }] = useUpdateStockMutation();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  console.log(args, "args");
+  const { data: CategoryList } = useGetCategoryQuery([]);
+  const { data: BrandList } = useGetBrandQuery([]);
+
+  console.log(CategoryList, "categories");
+  console.log(BrandList, "brands");
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof AddFormSchema>>({
     resolver: zodResolver(AddFormSchema),
@@ -145,11 +149,18 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
                     <SelectContent className="z-[1400]">
-                      <SelectItem value="DRYFOODS">DRY FOODS</SelectItem>
-                      <SelectItem value="TOILETRIES">TOILETRIES</SelectItem>
-                      <SelectItem value="CLEANING AGENTS">
-                        CLEANING AGENTS
-                      </SelectItem>
+                      {CategoryList?.map(
+                        (
+                          categoryList: { name: string; id: number },
+                          index: number
+                        ) => {
+                          return (
+                            <SelectItem key={index} value={categoryList.name}>
+                              {categoryList.name}
+                            </SelectItem>
+                          );
+                        }
+                      )}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -165,12 +176,25 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
               <FormItem>
                 <FormLabel>Brand</FormLabel>
                 <FormControl>
-                  <Input
-                    id="brand"
-                    placeholder="e.g Jogoo"
-                    {...field}
-                    className="w-full"
-                  />
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Select Brand" />
+                    </SelectTrigger>
+                    <SelectContent className="z-[1400]">
+                      {BrandList?.map(
+                        (
+                          brandList: { name: string; id: number },
+                          index: number
+                        ) => {
+                          return (
+                            <SelectItem key={index} value={brandList.name}>
+                              {brandList.name}
+                            </SelectItem>
+                          );
+                        }
+                      )}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -185,16 +209,12 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
           >
             <span>Close</span>
           </Button>
-          <Button className="bg-danger hover:bg-dangerPale">
-            {isLoading && <CircularProgress size="md" color="inherit" />}
-            <span>Delete Stock</span>
-          </Button>
+
           <Button className="bg-custom1 hover:bg-customPale" type="submit">
             {isLoading && <CircularProgress size="md" color="inherit" />}
             <span>Modify Stock</span>
           </Button>
         </div>
-        <DeleteAction isOpen={isDeleteDialogOpen} onClose={closeDeleteDialog} />
       </form>
     </Form>
   );

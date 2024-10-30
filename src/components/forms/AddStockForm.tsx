@@ -25,10 +25,21 @@ import {
 } from "@/components/ui/select";
 import { CircularProgress } from "@mui/material";
 import { StockProps } from "@/lib/types/StockItemTypes";
+import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
+import { useGetBrandQuery } from "@/features/stock/brandAPI";
+// import { useMemo } from "react";
 
 const AddStockForm: React.FC<StockProps> = ({ closeModal }) => {
   const { toast } = useToast();
   const [addStock, { isLoading }] = useAddStockMutation();
+
+  // Fetch Category and Brand information to use when adding new Stock products
+  const { data: CategoryList } = useGetCategoryQuery([]);
+  const { data: BrandList } = useGetBrandQuery([]);
+
+  console.log(CategoryList, "categories");
+  console.log(BrandList, "brands");
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof AddFormSchema>>({
     resolver: zodResolver(AddFormSchema),
@@ -56,7 +67,8 @@ const AddStockForm: React.FC<StockProps> = ({ closeModal }) => {
       toast({
         variant: "destructive",
         title: "Failed",
-        description: "An error occurred while adding stock item. Please try again!",
+        description:
+          "An error occurred while adding stock item. Please try again!",
       });
       console.log("Failed to add stock:", error);
     }
@@ -130,11 +142,18 @@ const AddStockForm: React.FC<StockProps> = ({ closeModal }) => {
                         <SelectValue placeholder="Select Category" />
                       </SelectTrigger>
                       <SelectContent className="z-[1400]">
-                        <SelectItem value="DRY FOODS">DRY FOODS</SelectItem>
-                        <SelectItem value="TOILETRIES">TOILETRIES</SelectItem>
-                        <SelectItem value="CLEANING AGENTS">
-                          CLEANING AGENTS
-                        </SelectItem>
+                        {CategoryList?.map(
+                          (
+                            categoryList: { name: string; id: number },
+                            index: number
+                          ) => {
+                            return (
+                              <SelectItem key={index} value={categoryList.name}>
+                                {categoryList.name}
+                              </SelectItem>
+                            );
+                          }
+                        )}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -150,12 +169,25 @@ const AddStockForm: React.FC<StockProps> = ({ closeModal }) => {
                 <FormItem>
                   <FormLabel>Brand</FormLabel>
                   <FormControl>
-                    <Input
-                      id="brand"
-                      placeholder="e.g Jogoo"
-                      {...field}
-                      className="w-full"
-                    />
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="Select Brand" />
+                      </SelectTrigger>
+                      <SelectContent className="z-[1400]">
+                        {BrandList?.map(
+                          (
+                            brandList: { name: string; id: number },
+                            index: number
+                          ) => {
+                            return (
+                              <SelectItem key={index} value={brandList.name}>
+                                {brandList.name}
+                              </SelectItem>
+                            );
+                          }
+                        )}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

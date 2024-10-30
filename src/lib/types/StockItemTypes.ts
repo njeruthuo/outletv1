@@ -1,10 +1,14 @@
+import { ICellRendererParams } from "ag-grid-community";
+
 export type StockItem = {
   id?: number;
   last_updated: Date;
   product: {
     name: string;
     price_per_item: string;
-    category: "DRYFOODS" | "TOILETRIES" | "CLEANING AGENTS";
+    category: {
+      name: string;
+    };
     brand: {
       name: string;
       contact: string;
@@ -13,15 +17,11 @@ export type StockItem = {
   quantity: number;
 };
 
-export interface cellRendererParams {
-  data: StockRow;
-}
-
 export type StockColumn = {
   field: string;
   flex: number;
   headerName?: string;
-  cellRenderer?: (params: cellRendererParams) => React.ReactElement;
+  cellRenderer?: (params: ICellRendererParams) => React.ReactElement;
 };
 
 export type StockRow = {
