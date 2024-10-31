@@ -1,27 +1,33 @@
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
-import { SearchBarProps, SearchContext } from "@/lib/types/SearchTypes";
+import { SearchBarProps } from "@/lib/types/SearchTypes";
+import { useSearchStockQuery } from "@/features/stock/stockAPI";
 
-const Search: React.FC<SearchBarProps> = ({ context }) => {
-  const handleSearch = (query: string) => {
-    console.log(query, "Query");
-    switch (context) {
-      case SearchContext.Home:
-        // handle search logic for Home
-        break;
-      case SearchContext.Products:
-        // handle search logic for Products
-        break;
-      case SearchContext.Orders:
-        // handle search logic for Orders
-        break;
-      case SearchContext.Customers:
-        // handle search logic for Customers
-        break;
-      case SearchContext.Reports:
-        // handle search logic for Reports
-        break;
-      default:
-        break;
+const Search: React.FC<SearchBarProps> = ({ setFunc }) => {
+  const location = useLocation();
+  const pathname = location.pathname;
+  const [query, setQuery] = useState("");
+
+  const getSearchContext = (pathname: string) => {
+    if (pathname.includes("/stock")) return "STOCK";
+    if (pathname.includes("/products")) return "Products";
+    if (pathname.includes("/orders")) return "Orders";
+    if (pathname.includes("/customers")) return "Customers";
+    if (pathname.includes("/reports")) return "Reports";
+    return null;
+  };
+
+  const context = getSearchContext(pathname);
+
+  const { data: searchResults } = useSearchStockQuery(query, {
+    skip: context !== "STOCK" || !query,
+  });
+
+  const handleSearch = (inputQuery: string) => {
+    setQuery(inputQuery);
+    if (context === "STOCK" && searchResults) {
+      setFunc(searchResults);
     }
   };
 

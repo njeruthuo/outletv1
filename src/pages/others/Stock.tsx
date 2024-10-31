@@ -20,12 +20,17 @@ const Stock = () => {
   const { data: stockItems } = useGetStockItemsQuery([]);
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [data, setData] = useState([]);
+  const [searchedStock, setSearchedStock] = useState([]);
+
+  console.log(searchedStock, "searched");
 
   useEffect(() => {
-    if (stockItems) {
-      setData(stockItems);
+    if (searchedStock.length > 0) {
+      setData(searchedStock); // Update with search results if available
+    } else if (stockItems) {
+      setData(stockItems); // Default to stock items if no search results
     }
-  }, [stockItems]);
+  }, [stockItems, searchedStock]);
 
   const CustomButtonComponent = (props: ICellRendererParams) => {
     return (
@@ -123,7 +128,7 @@ const Stock = () => {
           </div>
 
           {/* Working on the searchbar currently */}
-          <Search context={SearchContext.Products} />
+          <Search context={SearchContext.Products} setFunc={setSearchedStock} />
 
           <Button
             variant="contained"

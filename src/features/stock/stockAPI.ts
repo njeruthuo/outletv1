@@ -34,6 +34,10 @@ export const stockApi = createApi({
       }),
       invalidatesTags: ["Stock"],
     }),
+    searchStock: builder.query({
+      query: (searchText) => `stock/stock_api_view/?search=${searchText}`,
+      providesTags: ["Stock"],
+    }),
   }),
 });
 
@@ -42,4 +46,5 @@ export const {
   useAddStockMutation,
   useUpdateStockMutation,
   useDeleteStockMutation,
+  useSearchStockQuery,
 } = stockApi;

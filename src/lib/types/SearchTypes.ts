@@ -8,4 +8,5 @@ export enum SearchContext {
 
 export interface SearchBarProps {
   context: SearchContext;
+  setFunc?: any;
 }
