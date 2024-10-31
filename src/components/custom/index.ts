@@ -1,3 +1,5 @@
-import Sidebar from "./sidebar/Sidebar";
+// import Sidebar from "./sidebar/Sidebar";
+import FilterByBrand from "./FilterByBrand";
+import FilterByCategory from "./FilterByCategory";
 
-export { Sidebar };
+export { FilterByBrand, FilterByCategory };

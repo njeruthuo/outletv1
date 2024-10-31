@@ -43,3 +43,7 @@ export type StockProps = {
   closeModal: () => void;
   args?: StockRow;
 };
+export interface filterType {
+  filterBrand: string;
+  filterCategory: string;
+}

@@ -8,11 +8,17 @@ import {
   useDeleteStockMutation,
   useGetStockItemsQuery,
 } from "@/features/stock/stockAPI";
-import { StockColumn, StockItem, StockRow } from "@/lib/types/StockItemTypes";
+import {
+  filterType,
+  StockColumn,
+  StockItem,
+  StockRow,
+} from "@/lib/types/StockItemTypes";
 import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
 import DeleteAction from "@/components/forms/DeleteAction";
 // import AddPrompt from "@/components/custom/AddPrompt";
 import { SearchContext } from "@/lib/types/SearchTypes";
+import { FilterByBrand, FilterByCategory } from "@/components/custom";
 
 const Stock = () => {
   const [openStockAdd, setOpenStockAdd] = useState(false);
@@ -21,16 +27,39 @@ const Stock = () => {
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [data, setData] = useState([]);
   const [searchedStock, setSearchedStock] = useState([]);
-
-  console.log(searchedStock, "searched");
+  const [filter, setFilter] = useState<filterType>({
+    filterBrand: "",
+    filterCategory: "",
+  });
 
   useEffect(() => {
     if (searchedStock.length > 0) {
-      setData(searchedStock); // Update with search results if available
+      if (filter.filterBrand || filter.filterCategory) {
+        const filteredData = searchedStock.filter((stockItem: StockItem) => {
+          return (
+            stockItem.product.category.name == filter.filterCategory ||
+            stockItem.product.brand.name == filter.filterBrand
+          );
+        });
+        setData(filteredData);
+      } else {
+        setData(searchedStock);
+      }
     } else if (stockItems) {
-      setData(stockItems); // Default to stock items if no search results
+      if (filter.filterBrand || filter.filterCategory) {
+        const filteredData = stockItems.filter((stockItem: StockItem) => {
+          return (
+            stockItem.product.category.name == filter.filterCategory ||
+            stockItem.product.brand.name == filter.filterBrand
+          );
+        });
+        setData(filteredData);
+      } else {
+        setData(stockItems);
+      }
+      // setData(stockItems);
     }
-  }, [stockItems, searchedStock]);
+  }, [stockItems, searchedStock, filter.filterBrand, filter.filterCategory]);
 
   const CustomButtonComponent = (props: ICellRendererParams) => {
     return (
@@ -63,6 +92,7 @@ const Stock = () => {
     );
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [colDefs, setColDefs] = useState<StockColumn[]>([
     { field: "name", flex: 1, headerName: "Product Name" },
     { field: "price", flex: 1, headerName: "Price per unit" },
@@ -83,10 +113,6 @@ const Stock = () => {
       cellRenderer: CustomDeleteButtonComponent,
     },
   ]);
-
-  if ("njeru " === String("njeru")) {
-    console.log(setData, setColDefs);
-  }
 
   const rows = useMemo(() => {
     return data?.map((item: StockItem) => ({
@@ -121,10 +147,12 @@ const Stock = () => {
             <p className="text-2xl font-bold">Stock Management</p>
           </div>
 
-          <div id="filter">
+          <div id="filter" className="flex gap-2">
+            <FilterByCategory func={setFilter} />
+            <FilterByBrand func={setFilter} />
             {/* Filter settings will appear here */}
             {/* <TuneIcon className="hover:cursor-pointer" /> */}
-            <img src="/filter.svg" className="h-10" alt="" />
+            {/* <img src="/filter.svg" className="h-10" alt="" /> */}
           </div>
 
           {/* Working on the searchbar currently */}
