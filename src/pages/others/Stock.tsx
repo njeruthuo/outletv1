@@ -11,6 +11,8 @@ import {
 import { StockColumn, StockItem, StockRow } from "@/lib/types/StockItemTypes";
 import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
 import DeleteAction from "@/components/forms/DeleteAction";
+// import AddPrompt from "@/components/custom/AddPrompt";
+import { SearchContext } from "@/lib/types/SearchTypes";
 
 const Stock = () => {
   const [openStockAdd, setOpenStockAdd] = useState(false);
@@ -120,7 +122,8 @@ const Stock = () => {
             <img src="/filter.svg" className="h-10" alt="" />
           </div>
 
-          <Search />
+          {/* Working on the searchbar currently */}
+          <Search context={SearchContext.Products} />
 
           <Button
             variant="contained"
@@ -131,6 +134,10 @@ const Stock = () => {
             <AddIcon />
             <span className="p-1">stock</span>
           </Button>
+
+          {/* <div className="hover:cursor-pointer flex p-2 bg-customPale rounded-full">
+            <AddPrompt />
+          </div> */}
         </div>
 
         <div id="stock-table" className="w-full mt-4">
