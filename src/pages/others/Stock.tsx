@@ -13,9 +13,9 @@ import {
   StockColumn,
   StockItem,
   StockRow,
-} from "@/lib/types/StockItemTypes";
+} from "@/lib/types/stock/StockItemTypes";
 import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
-import DeleteAction from "@/components/forms/DeleteAction";
+import DeleteAction from "@/components/forms/stock/DeleteAction";
 // import AddPrompt from "@/components/custom/AddPrompt";
 import { SearchContext } from "@/lib/types/SearchTypes";
 import { FilterByBrand, FilterByCategory } from "@/components/custom";
@@ -57,11 +57,10 @@ const Stock = () => {
       } else {
         setData(stockItems);
       }
-      // setData(stockItems);
     }
   }, [stockItems, searchedStock, filter.filterBrand, filter.filterCategory]);
 
-  const CustomButtonComponent = (props: ICellRendererParams) => {
+  const CustomInfoButtonComponent = (props: ICellRendererParams) => {
     return (
       <div
         className="flex h-full justify-center items-center"
@@ -104,7 +103,7 @@ const Stock = () => {
       field: "info",
       flex: 0.5,
       headerName: "",
-      cellRenderer: CustomButtonComponent,
+      cellRenderer: CustomInfoButtonComponent,
     },
     {
       field: "delete",
@@ -126,7 +125,7 @@ const Stock = () => {
     }));
   }, [data]);
 
-  function stockModalOpener() {
+  function stockAddModalOpener() {
     setOpenStockAdd((prev: boolean) => !prev);
   }
 
@@ -138,10 +137,6 @@ const Stock = () => {
   return (
     <section className="flex w-full ">
       <div className="w-full">
-        {/* Add stock button will be exactly here */}
-        {/* We will see the list of stock items and their quantities */}
-        {/* We will have a way to CRUD stock items here. */}
-        {/* We will have a way to distribute the stock to distribution centers */}
         <div className="flex justify-end w-full space-x-4 place-items-center">
           <div className="mr-auto">
             <p className="text-2xl font-bold">Stock Management</p>
@@ -150,19 +145,15 @@ const Stock = () => {
           <div id="filter" className="flex gap-2">
             <FilterByCategory func={setFilter} />
             <FilterByBrand func={setFilter} />
-            {/* Filter settings will appear here */}
-            {/* <TuneIcon className="hover:cursor-pointer" /> */}
-            {/* <img src="/filter.svg" className="h-10" alt="" /> */}
           </div>
 
-          {/* Working on the searchbar currently */}
           <Search context={SearchContext.Products} setFunc={setSearchedStock} />
 
           <Button
             variant="contained"
             color="info"
             className="p-1 flex place-items-center"
-            onClick={stockModalOpener}
+            onClick={stockAddModalOpener}
           >
             <AddIcon />
             <span className="p-1">stock</span>

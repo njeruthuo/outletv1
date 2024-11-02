@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 // import { ICellRendererParams } from "ag-grid-community";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AddFormSchema } from "@/lib/types/AddFormSchema";
+import { AddFormSchema } from "@/lib/types/stock/AddFormSchema";
 import { useUpdateStockMutation } from "@/features/stock/stockAPI";
 import {
   Form,
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 
 import { CircularProgress } from "@mui/material";
-import { StockProps } from "@/lib/types/StockItemTypes";
+import { StockProps } from "@/lib/types/stock/StockItemTypes";
 import { useEffect } from "react";
 import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
 import { useGetBrandQuery } from "@/features/stock/brandAPI";

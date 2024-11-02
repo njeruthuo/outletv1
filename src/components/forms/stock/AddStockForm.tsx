@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AddFormSchema } from "@/lib/types/AddFormSchema";
+import { AddFormSchema } from "@/lib/types/stock/AddFormSchema";
 import { useAddStockMutation } from "@/features/stock/stockAPI";
 import {
   Form,
@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CircularProgress } from "@mui/material";
-import { StockProps } from "@/lib/types/StockItemTypes";
+import { StockProps } from "@/lib/types/stock/StockItemTypes";
 import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
 import { useGetBrandQuery } from "@/features/stock/brandAPI";
 // import { useMemo } from "react";

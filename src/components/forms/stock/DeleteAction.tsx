@@ -26,12 +26,10 @@ const DeleteAction: React.FC<DeleteActionProps> = ({ data, onConfirm }) => {
   }, [data]);
 
   const handleConfirmClick = async () => {
-
     if (!stockId) {
       console.error("Stock ID is undefined!");
       return;
     }
-
 
     if (onConfirm) {
       try {

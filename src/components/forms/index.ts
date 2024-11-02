@@ -1,4 +1,4 @@
-import AddStockForm from "./AddStockForm";
-import UpdateStockForm from "./UpdateStockForm";
+import AddStockForm from "./stock/AddStockForm";
+import UpdateStockForm from "./stock/UpdateStockForm";
 
 export { AddStockForm, UpdateStockForm };

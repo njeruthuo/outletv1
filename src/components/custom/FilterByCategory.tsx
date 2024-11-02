@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
-import { filterType } from "@/lib/types/StockItemTypes";
+import { filterType } from "@/lib/types/stock/StockItemTypes";
 import { useState } from "react";
 
 interface FilterByCategoryProps {

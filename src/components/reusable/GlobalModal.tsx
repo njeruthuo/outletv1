@@ -1,6 +1,5 @@
-import { GlobalModalPropTypes } from "@/lib/types/GlobalModalTypes";
+import { GlobalModalPropTypes } from "@/lib/types/stock/GlobalModalTypes";
 import { ModalDialog, Modal, ModalClose } from "@mui/joy";
-
 
 const GlobalModal = ({ open, closeFunc, children }: GlobalModalPropTypes) => {
   return (
@@ -15,7 +14,6 @@ const GlobalModal = ({ open, closeFunc, children }: GlobalModalPropTypes) => {
       >
         <ModalClose />
         <div className="z-[1400]">{children}</div>
-        
       </ModalDialog>
     </Modal>
   );

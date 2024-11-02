@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StockColumn } from "@/lib/types/StockItemTypes";
+import { StockColumn } from "@/lib/types/stock/StockItemTypes";
 
 type useStockTableColDefsPropType = {
   CustomButtonComponent: (params: unknown) => JSX.Element;
