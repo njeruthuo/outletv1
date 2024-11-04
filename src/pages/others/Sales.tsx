@@ -36,7 +36,7 @@ const Sales = () => {
     { field: "location", flex: 1 },
     { field: "opening_date", flex: 1, headerName: "Opening Date" },
     { field: "avg_weekly_profit", flex: 1, headerName: "Avg Weekly Profit" },
-    { field: "licenses", flex: 1, headerName: "Licenses" },
+    // { field: "licenses", flex: 1, headerName: "Licenses" },
     { field: "weight_tat", flex: 1, headerName: "AVG Turn Around Time" },
     {
       field: "info",
@@ -53,7 +53,7 @@ const Sales = () => {
       location: item.location,
       weight_tat: item.weight_tat,
       opening_date: formatDate(item.opening_date),
-      licenses: item.licenses,
+      // licenses: item.licenses,
       avg_weekly_profit: item.avg_weekly_profit,
     }));
   }, [ShopList]);
