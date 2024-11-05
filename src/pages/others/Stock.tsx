@@ -1,9 +1,14 @@
 import { Button } from "@mui/material";
 import { formatDate } from "@/utils/date";
 import AddIcon from "@mui/icons-material/Add";
+import { AddStockForm } from "@/components/forms";
 import { useEffect, useMemo, useState } from "react";
 import { ICellRendererParams } from "ag-grid-community";
-import { AddStockForm, UpdateStockForm } from "@/components/forms";
+import { SearchContext } from "@/lib/types/SearchTypes";
+import ManageStock from "@/components/forms/stock/ManageStock";
+import DeleteAction from "@/components/forms/stock/DeleteAction";
+import { FilterByBrand, FilterByCategory } from "@/components/custom";
+import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
 import {
   useDeleteStockMutation,
   useGetStockItemsQuery,
@@ -14,19 +19,14 @@ import {
   StockItem,
   StockRow,
 } from "@/lib/types/stock/StockItemTypes";
-import { Search, GlobalModal, ReusableGrid } from "@/components/reusable";
-import DeleteAction from "@/components/forms/stock/DeleteAction";
-// import AddPrompt from "@/components/custom/AddPrompt";
-import { SearchContext } from "@/lib/types/SearchTypes";
-import { FilterByBrand, FilterByCategory } from "@/components/custom";
 
 const Stock = () => {
-  const [openStockAdd, setOpenStockAdd] = useState(false);
-  const [updatePayload, setUpdatePayload] = useState<StockRow>();
-  const { data: stockItems } = useGetStockItemsQuery([]);
-  const [openInfoModal, setOpenInfoModal] = useState(false);
   const [data, setData] = useState([]);
   const [searchedStock, setSearchedStock] = useState([]);
+  const { data: stockItems } = useGetStockItemsQuery([]);
+  const [openStockAdd, setOpenStockAdd] = useState(false);
+  const [openInfoModal, setOpenInfoModal] = useState(false);
+  const [updatePayload, setUpdatePayload] = useState<StockRow>();
   const [filter, setFilter] = useState<filterType>({
     filterBrand: "",
     filterCategory: "",
@@ -186,7 +186,11 @@ const Stock = () => {
           open={openInfoModal}
           closeFunc={() => setOpenInfoModal((prev: boolean) => !prev)}
           children={
-            <UpdateStockForm
+            // <UpdateStockForm
+            //   closeModal={() => setOpenInfoModal((prev: boolean) => !prev)}
+            //   args={updatePayload}
+            // />
+            <ManageStock
               closeModal={() => setOpenInfoModal((prev: boolean) => !prev)}
               args={updatePayload}
             />

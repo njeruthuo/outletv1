@@ -1,13 +1,8 @@
 import { z } from "zod";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CircularProgress } from "@mui/material";
-import { useGetBrandQuery } from "@/features/stock/brandAPI";
-import { StockProps } from "@/lib/types/stock/StockItemTypes";
-import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddFormSchema } from "@/lib/types/stock/AddFormSchema";
@@ -29,8 +24,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { CircularProgress } from "@mui/material";
+import { StockProps } from "@/lib/types/stock/StockItemTypes";
+import { useEffect } from "react";
+import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
+import { useGetBrandQuery } from "@/features/stock/brandAPI";
 
-const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
+const AssignStock: React.FC<StockProps> = ({ closeModal, args }) => {
+    /**
+     * 
+     * For this modal, we are going to assign product contained to a shop.
+     * When we add to a shop, we reduce from stock.
+     * We should see the product quantity remaining for a shop.
+     * When we click modify, we should send the added amount to the backend instead of the total.
+     * 
+     */
   const { toast } = useToast();
   const [updateStock, { isLoading }] = useUpdateStockMutation();
 
@@ -77,13 +85,12 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
         title: "Failed",
         description: "An error occurred while updating the stock item!",
       });
-      console.log("Failed to add stock:", error);
+      return error;
     }
   }
-
   return (
     <Form {...form}>
-      <h2 className="text-xl font-bold my-1">Update Stock item</h2>
+      <h2 className="text-xl font-bold my-1">Assign Stock item</h2>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex gap-3">
           <FormField
@@ -214,4 +221,4 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
     </Form>
   );
 };
-export default UpdateStockForm;
+export default AssignStock;
