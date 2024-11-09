@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@mui/material";
 import { useGetBrandQuery } from "@/features/stock/brandAPI";
 import { StockProps } from "@/lib/types/stock/StockItemTypes";
@@ -28,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
 
 const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
   const { toast } = useToast();
@@ -131,6 +130,7 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
             )}
           />
         </div>
+
         <div className="flex gap-3">
           <FormField
             control={form.control}
@@ -198,17 +198,14 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
         </div>
 
         <div className="flex justify-end gap-4">
-          <Button
-            className="bg-custom2 hover:bg-custom2 mr-auto"
-            onClick={() => closeModal()}
-          >
+          <GlobalCloseButton closeModal={() => closeModal()}>
             <span>Close</span>
-          </Button>
+          </GlobalCloseButton>
 
-          <Button className="bg-custom1 hover:bg-customPale" type="submit">
+          <GlobalSubmitButton>
             {isLoading && <CircularProgress size="md" color="inherit" />}
             <span>Modify Stock</span>
-          </Button>
+          </GlobalSubmitButton>
         </div>
       </form>
     </Form>

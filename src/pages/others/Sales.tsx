@@ -15,7 +15,6 @@ const Sales = () => {
   const ShopDetailsInfoButton = (params: ICellRendererParams) => {
     console.log(params, "params");
     function handleIconClick() {
-      // setOpenAddShopModal((prev: boolean) => !prev);
       console.log(`Info Button Clicked with: ${params}`);
     }
 

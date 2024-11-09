@@ -1,224 +1,146 @@
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { useToast } from "@/hooks/use-toast";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AddFormSchema } from "@/lib/types/stock/AddFormSchema";
-import { useUpdateStockMutation } from "@/features/stock/stockAPI";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
+import * as React from "react";
+import Grid from "@mui/material/Grid2";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { CircularProgress } from "@mui/material";
+// import Paper from "@mui/material/Paper";
+// import { styled } from "@mui/material/styles";
 import { StockProps } from "@/lib/types/stock/StockItemTypes";
-import { useEffect } from "react";
-import { useGetCategoryQuery } from "@/features/stock/categoryAPI";
-import { useGetBrandQuery } from "@/features/stock/brandAPI";
+import { useGetShopListQuery } from "@/features/sales/salesAPI";
+import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
+import { ShopType } from "@/lib/types/sales/ShopType";
+// import { CircularProgress } from "@mui/material";
 
-const AssignStock: React.FC<StockProps> = ({ closeModal, args }) => {
-    /**
-     * 
-     * For this modal, we are going to assign product contained to a shop.
-     * When we add to a shop, we reduce from stock.
-     * We should see the product quantity remaining for a shop.
-     * When we click modify, we should send the added amount to the backend instead of the total.
-     * 
-     */
-  const { toast } = useToast();
-  const [updateStock, { isLoading }] = useUpdateStockMutation();
+// const Item = styled(Paper)(({ theme }) => ({
+//   backgroundColor: "#fff",
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   textAlign: "center",
+//   color: theme.palette.text.secondary,
+//   ...theme.applyStyles("dark", {
+//     backgroundColor: "#1A2027",
+//   }),
+// }));
 
-  const { data: CategoryList } = useGetCategoryQuery([]);
-  const { data: BrandList } = useGetBrandQuery([]);
+const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
+  const { data: ShopList } = useGetShopListQuery([]);
+  const [shopSelected, setShopSelected] = React.useState<string | undefined>();
 
-  const form = useForm<z.infer<typeof AddFormSchema>>({
-    resolver: zodResolver(AddFormSchema),
-    defaultValues: {
-      name: args?.name || "",
-      price_per_item: args?.price.toString() || "",
-      category: args?.category || "",
-      brand: args?.brand || "",
-      quantity: args?.quantity.toString() || "",
-    },
-  });
+  console.log(shopSelected, "shopSelected");
 
-  useEffect(() => {
-    if (args) {
-      form.reset({
-        name: args.name,
-        price_per_item: args.price.toString(),
-        category: args.category,
-        brand: args.brand,
-        quantity: args.quantity.toString(),
-      });
-    }
-  }, [args, form]);
-
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof AddFormSchema>) {
-    try {
-      await updateStock({ ...values, id: args?.id }).unwrap();
-      closeModal();
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Product Modified successfully!",
-      });
-    } catch (error) {
-      closeModal();
-      toast({
-        variant: "destructive",
-        title: "Failed",
-        description: "An error occurred while updating the stock item!",
-      });
-      return error;
+  function getCurrentStockQuantity() {
+    if (shopSelected) {
+      const currentShop = ShopList?.find(
+        (shop: ShopType) => shop.branch_name === shopSelected
+      );
+      console.log(currentShop, "current_stock_quantity");
     }
   }
+
+  function handleShopChange(e: React.ChangeEvent<{ value: string }>) {
+    setShopSelected(e.target?.value);
+  }
+
+  getCurrentStockQuantity();
+
   return (
-    <Form {...form}>
-      <h2 className="text-xl font-bold my-1">Assign Stock item</h2>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex gap-3">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Product name</FormLabel>
-                <FormControl>
-                  <Input id="name" placeholder="Maize flour...." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="price_per_item"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price per unit</FormLabel>
-                <FormControl>
-                  <Input id="price_per_item" placeholder="e.g 200" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="quantity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Total number of products</FormLabel>
-                <FormControl>
-                  <Input
-                    id="quantity"
-                    placeholder="4500 bales"
-                    type="number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="flex gap-3">
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="Select Category" />
+    <>
+      <div>
+        <h2 className="text-xl font-bold">Assign Stock item</h2>
+        <div className="my-3.5" id="container">
+          <Grid container spacing={2}>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Product Name</h3>
+                <p>{args?.name}</p>
+              </div>
+            </Grid>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Quantity</h3>
+                <p>{args?.quantity}</p>
+              </div>
+            </Grid>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Category</h3>
+                <p>{args?.category}</p>
+              </div>
+            </Grid>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Last updated</h3>
+                <p>
+                  {args?.last_updated
+                    ? new Date(args.last_updated).toDateString()
+                    : "N/A"}
+                </p>
+              </div>
+            </Grid>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Select Shop</h3>
+                <div>
+                  <Select onValueChange={handleShopChange}>
+                    <SelectTrigger className="w-full my-1 outline-none z-[1500]">
+                      <SelectValue placeholder="Select a Shop" />
                     </SelectTrigger>
                     <SelectContent className="z-[1400]">
-                      {CategoryList?.map(
-                        (
-                          categoryList: { name: string; id: number },
-                          index: number
-                        ) => {
-                          return (
-                            <SelectItem key={index} value={categoryList.name}>
-                              {categoryList.name}
-                            </SelectItem>
-                          );
-                        }
-                      )}
+                      <SelectGroup>
+                        <SelectLabel>Our shops</SelectLabel>
+                        {ShopList?.map((shop: ShopType) => (
+                          <SelectItem
+                            key={shop.branch_name}
+                            value={shop.branch_name}
+                          >
+                            {shop.branch_name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     </SelectContent>
                   </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="brand"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Brand</FormLabel>
-                <FormControl>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="Select Brand" />
-                    </SelectTrigger>
-                    <SelectContent className="z-[1400]">
-                      {BrandList?.map(
-                        (
-                          brandList: { name: string; id: number },
-                          index: number
-                        ) => {
-                          return (
-                            <SelectItem key={index} value={brandList.name}>
-                              {brandList.name}
-                            </SelectItem>
-                          );
-                        }
-                      )}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                </div>
+              </div>
+            </Grid>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Current Stock Quantity</h3>
+                <p>{args?.name}</p>
+              </div>
+            </Grid>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Units to Disburse</h3>
+                <p>{args?.name}</p>
+              </div>
+            </Grid>
+            <Grid size={3}>
+              <div>
+                <h3 className="text-sm font-bold">Units Quantity</h3>
+                <p>{args?.name}</p>
+              </div>
+            </Grid>
+          </Grid>
         </div>
 
-        <div className="flex justify-end gap-4">
-          <Button
-            className="bg-custom2 hover:bg-custom2 mr-auto"
-            onClick={() => closeModal()}
-          >
+        <div className="flex justify-end gap-4 mt-2">
+          <GlobalCloseButton closeModal={() => closeModal()}>
             <span>Close</span>
-          </Button>
+          </GlobalCloseButton>
 
-          <Button className="bg-custom1 hover:bg-customPale" type="submit">
-            {isLoading && <CircularProgress size="md" color="inherit" />}
-            <span>Modify Stock</span>
-          </Button>
+          <GlobalSubmitButton>
+            {/* {isLoading && <CircularProgress size="md" color="inherit" />} */}
+            <span>Assign Stock</span>
+          </GlobalSubmitButton>
         </div>
-      </form>
-    </Form>
+      </div>
+    </>
   );
 };
-export default AssignStock;
+export default UpdateStockForm;

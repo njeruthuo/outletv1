@@ -30,8 +30,10 @@ export type StockRow = {
   price: string;
   quantity: number;
   last_updated: Date;
-  category: string;
+  category?: string;
   brand: string;
+  shop?: string;
+  qualityAssigned?: string;
 };
 
 export type ReusableGridProps = {
@@ -43,6 +45,7 @@ export type StockProps = {
   closeModal: () => void;
   args?: StockRow;
 };
+
 export interface filterType {
   filterBrand: string;
   filterCategory: string;
