@@ -23,6 +23,7 @@ export interface ShopType {
   opening_date: Date;
   weight_tat?: number;
   current_load?: StockItem[];
+  stock?: StockItem[];
 }
 
 export type ShopColumn = {

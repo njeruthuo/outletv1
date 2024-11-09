@@ -26,7 +26,7 @@ const ManageStock: React.FC<StockProps> = ({ closeModal, args }) => {
   return (
     <section>
       <div className="flex space-x-5 place-content-center">
-        <div className="space-y-4 w-1/6 text-md mt-1">
+        <div className="space-y-4 w-2/6 text-md mt-1">
           <Button
             id="Update"
             onClick={handleSelectTab}

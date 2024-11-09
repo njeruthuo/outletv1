@@ -6,10 +6,13 @@ export const stockApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
   tagTypes: ["Stock"],
   endpoints: (builder) => ({
+    // Fetch a list of stock items
     getStockItems: builder.query({
       query: () => "stock/stock_api_view/",
       providesTags: ["Stock"],
     }),
+
+    // Add stock Item
     addStock: builder.mutation({
       query: (newStock) => ({
         url: "/stock/stock_api_view/",
@@ -19,6 +22,7 @@ export const stockApi = createApi({
       invalidatesTags: ["Stock"],
     }),
 
+    // Update stock
     updateStock: builder.mutation({
       query: ({ id, ...updatedStock }) => ({
         url: `/stock/stock_api_view/${id}/`,
@@ -27,6 +31,8 @@ export const stockApi = createApi({
       }),
       invalidatesTags: ["Stock"],
     }),
+
+    // Delete a stock item
     deleteStock: builder.mutation({
       query: ({ id }) => ({
         url: `/stock/stock_api_view/${id}/`,
@@ -34,6 +40,18 @@ export const stockApi = createApi({
       }),
       invalidatesTags: ["Stock"],
     }),
+
+    // Disburse Stock to a shop
+    disburseToShop: builder.mutation({
+      query: ({ disburseQuantity, product_name, shop }) => ({
+        url: `/shop/shop_disbursement/`,
+        method: "POST",
+        body: { disburseQuantity, product_name, shop },
+      }),
+      invalidatesTags: ["Stock"],
+    }),
+
+    // Handle searching
     searchStock: builder.query({
       query: (searchText) => `stock/stock_api_view/?search=${searchText}`,
       providesTags: ["Stock"],
@@ -47,4 +65,5 @@ export const {
   useUpdateStockMutation,
   useDeleteStockMutation,
   useSearchStockQuery,
+  useDisburseToShopMutation
 } = stockApi;

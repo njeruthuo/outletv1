@@ -1,5 +1,13 @@
-import * as React from "react";
 import Grid from "@mui/material/Grid2";
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { CircularProgress } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { ShopType } from "@/lib/types/sales/ShopType";
+import { useGetShopListQuery } from "@/features/sales/salesAPI";
+import { useDisburseToShopMutation } from "@/features/stock/stockAPI";
+import { StockItem, StockProps } from "@/lib/types/stock/StockItemTypes";
+import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
 import {
   Select,
   SelectContent,
@@ -9,45 +17,71 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import Paper from "@mui/material/Paper";
-// import { styled } from "@mui/material/styles";
-import { StockProps } from "@/lib/types/stock/StockItemTypes";
-import { useGetShopListQuery } from "@/features/sales/salesAPI";
-import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
-import { ShopType } from "@/lib/types/sales/ShopType";
-// import { CircularProgress } from "@mui/material";
-
-// const Item = styled(Paper)(({ theme }) => ({
-//   backgroundColor: "#fff",
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: "center",
-//   color: theme.palette.text.secondary,
-//   ...theme.applyStyles("dark", {
-//     backgroundColor: "#1A2027",
-//   }),
-// }));
 
 const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
+  const { toast } = useToast();
   const { data: ShopList } = useGetShopListQuery([]);
-  const [shopSelected, setShopSelected] = React.useState<string | undefined>();
+  const [disburseToShop, isLoading] = useDisburseToShopMutation();
+  const [shopSelected, setShopSelected] = useState<string>();
+  const [currentQuantity, setCurrentQuantity] = useState<number>(0);
+  const [disburseQuantity, setDisburseQuantity] = useState<number>(0);
 
-  console.log(shopSelected, "shopSelected");
+  const assignObj = useMemo(() => {
+    return {
+      disburseQuantity: disburseQuantity,
+      product_name: args?.name,
+      shop: shopSelected,
+    };
+  }, [disburseQuantity, args?.name, shopSelected]);
 
-  function getCurrentStockQuantity() {
+  useEffect(() => {
     if (shopSelected) {
       const currentShop = ShopList?.find(
         (shop: ShopType) => shop.branch_name === shopSelected
       );
-      console.log(currentShop, "current_stock_quantity");
+
+      const stockItem = currentShop?.stock?.find(
+        (item: StockItem) => item.product.name === args?.name
+      );
+
+      setCurrentQuantity(stockItem?.quantity || 0);
+    }
+  }, [shopSelected, ShopList, args?.name]);
+
+  const handleDisbursementQuantityChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const input = parseInt(e.target.value) || 0;
+    const maxQuantity = args?.quantity || 0;
+
+    if (input < 0) {
+      setDisburseQuantity(0);
+    } else if (input > maxQuantity) {
+      setDisburseQuantity(maxQuantity);
+    } else {
+      setDisburseQuantity(input);
+    }
+  };
+
+  async function handleDisburseToShop() {
+    try {
+      const response = await disburseToShop({ ...assignObj });
+      toast({
+        variant: "default",
+        title: "Success",
+        description: "The disbursement was successful",
+      });
+      closeModal();
+      return response;
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error Occurred",
+        description: "There was an error disbursing the stock",
+      });
+      return error;
     }
   }
-
-  function handleShopChange(e: React.ChangeEvent<{ value: string }>) {
-    setShopSelected(e.target?.value);
-  }
-
-  getCurrentStockQuantity();
 
   return (
     <>
@@ -87,7 +121,11 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
               <div>
                 <h3 className="text-sm font-bold">Select Shop</h3>
                 <div>
-                  <Select onValueChange={handleShopChange}>
+                  <Select
+                    onValueChange={(value: string) => {
+                      setShopSelected(value);
+                    }}
+                  >
                     <SelectTrigger className="w-full my-1 outline-none z-[1500]">
                       <SelectValue placeholder="Select a Shop" />
                     </SelectTrigger>
@@ -110,20 +148,39 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
             </Grid>
             <Grid size={3}>
               <div>
-                <h3 className="text-sm font-bold">Current Stock Quantity</h3>
-                <p>{args?.name}</p>
+                <h3 className="text-sm font-bold">Quantity to Disburse</h3>
+                <div className="mt-1">
+                  <Input
+                    min={0}
+                    max={args?.quantity || 0}
+                    type="number"
+                    onChange={handleDisbursementQuantityChange}
+                    value={disburseQuantity}
+                  />
+                </div>
               </div>
             </Grid>
             <Grid size={3}>
               <div>
-                <h3 className="text-sm font-bold">Units to Disburse</h3>
-                <p>{args?.name}</p>
+                <h3 className="text-sm font-bold">Initial Quantity</h3>
+                <div className="mt-1">
+                  <Input value={currentQuantity} readOnly />
+                </div>
               </div>
             </Grid>
             <Grid size={3}>
               <div>
-                <h3 className="text-sm font-bold">Units Quantity</h3>
-                <p>{args?.name}</p>
+                <h3 className="text-sm font-bold">Stock Quantity</h3>
+                <div className="mt-1">
+                  <Input
+                    value={
+                      disburseQuantity
+                        ? (currentQuantity || 0) + disburseQuantity
+                        : currentQuantity
+                    }
+                    readOnly
+                  />
+                </div>
               </div>
             </Grid>
           </Grid>
@@ -134,9 +191,9 @@ const UpdateStockForm: React.FC<StockProps> = ({ closeModal, args }) => {
             <span>Close</span>
           </GlobalCloseButton>
 
-          <GlobalSubmitButton>
-            {/* {isLoading && <CircularProgress size="md" color="inherit" />} */}
-            <span>Assign Stock</span>
+          <GlobalSubmitButton handleSubmit={handleDisburseToShop}>
+            {!isLoading && <CircularProgress size="md" color="inherit" />}
+            <span>Disburse Stock</span>
           </GlobalSubmitButton>
         </div>
       </div>
