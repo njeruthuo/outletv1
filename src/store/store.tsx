@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authApi } from "@/pages/auth/reducers/login";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import AuthReducer from "@/pages/auth/reducers/AuthSlice";
+
 import StockReducer from "@/features/stock/stockSlice";
-import { stockApi } from "@/features/stock/stockAPI";
-import { categoryAPI } from "@/features/stock/categoryAPI";
-import { brandAPI } from "@/features/stock/brandAPI";
+import AuthReducer from "@/pages/auth/reducers/AuthSlice";
+
 import { salesAPI } from "@/features/sales/salesAPI";
+import { authApi } from "@/pages/auth/reducers/login";
+
+import { brandAPI, categoryAPI, stockApi } from "@/features/stock";
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
 
     [salesAPI.reducerPath]: salesAPI.reducer,
   },
+  
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)

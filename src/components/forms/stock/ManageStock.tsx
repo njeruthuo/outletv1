@@ -1,58 +1,38 @@
-import { useState } from "react";
 import AssignStock from "./AssignStock";
-import { Button } from "@/components/ui/button";
 import UpdateStockForm from "./UpdateStockForm";
-import { Separator } from "@/components/ui/separator";
 import { StockProps } from "@/lib/types/stock/StockItemTypes";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const ManageStock: React.FC<StockProps> = ({ closeModal, args }) => {
-  const [activeTab, setActiveTab] = useState<string>("Update");
-
-  const handleSelectTab = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const id = e.currentTarget.id;
-    setActiveTab(id);
-  };
-
-  const displayContentTabs = () => {
-    if (activeTab == "Update")
-      return <UpdateStockForm closeModal={closeModal} args={args} />;
-    else if (activeTab == "Assign")
-      return <AssignStock closeModal={closeModal} args={args} />;
-  };
-
-  const styles = `hover:cursor-pointer w-full p-1 rounded-md text-black`;
-
   return (
-    <section>
-      <div className="flex space-x-5 place-content-center">
-        <div className="space-y-4 w-2/6 text-md mt-1">
-          <Button
-            id="Update"
-            onClick={handleSelectTab}
-            className={`${styles} ${
-              activeTab === "Update"
-                ? "bg-custom1 hover:bg-customPale text-white"
-                : "bg-gray-200 hover:bg-gray-200"
-            }`}
-          >
-            Update
-          </Button>
+    <section className="p-4">
+      <div className="flex justify-center">
+        <div className="w-full">
+          <Tabs defaultValue="Update" className="space-y-4">
+            <TabsList className="flex justify-between w-full">
+              <TabsTrigger value="Update" className="flex-1">
+                Update
+              </TabsTrigger>
+              <TabsTrigger value="Assign" className="flex-1">
+                Assign
+              </TabsTrigger>
+            </TabsList>
 
-          <Button
-            id="Assign"
-            onClick={handleSelectTab}
-            className={`${styles} ${
-              activeTab === "Assign"
-                ? "bg-custom1 hover:bg-customPale text-white"
-                : "bg-gray-200 hover:bg-gray-200"
-            }`}
-          >
-            Assign
-          </Button>
+            <TabsContent
+              value="Update"
+              className="p-4 max-h-[70vh] overflow-y-auto"
+            >
+              <UpdateStockForm closeModal={closeModal} args={args} />
+            </TabsContent>
+
+            <TabsContent
+              value="Assign"
+              className="p-4 max-h-[70vh] overflow-y-auto"
+            >
+              <AssignStock closeModal={closeModal} args={args} />
+            </TabsContent>
+          </Tabs>
         </div>
-        <Separator orientation="vertical" />
-        <div>{displayContentTabs()}</div>
       </div>
     </section>
   );

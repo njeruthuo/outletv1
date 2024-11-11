@@ -11,7 +11,7 @@ const GlobalModal = ({ open, closeFunc, children }: GlobalModalPropTypes) => {
         variant="soft"
         aria-labelledby="modal-title"
         aria-describedby="modal-desc"
-        style={{ width: "850px", height: "400px" }}
+        className="animate-fade-in"
       >
         <ModalClose />
         <div className="z-[1400]">{children}</div>

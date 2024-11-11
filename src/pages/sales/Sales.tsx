@@ -1,48 +1,30 @@
-import { useMemo, useState } from "react";
 import { Button } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { useGetShopListQuery } from "@/features/sales/salesAPI";
-import { ShopColumn, ShopType } from "@/lib/types/sales/ShopType";
 import { formatDate } from "@/utils/date";
-import { GlobalModal, ReusableGrid } from "@/components/reusable";
+import { useMemo, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import ShopInfo from "@/components/custom/ShopInfo";
+import { AddEmployeeForm } from "@/components/forms";
 import { ICellRendererParams } from "ag-grid-community";
 import AddShopForm from "@/components/forms/sales/AddShopForm";
+import { GlobalModal, ReusableGrid } from "@/components/reusable";
+import { useGetShopListQuery } from "@/features/sales/salesAPI";
+import { ShopColumn, ShopType } from "@/lib/types/sales/ShopType";
 
 const Sales = () => {
   const { data: ShopList } = useGetShopListQuery([]);
-  const [openAddShopModal, setOpenAddShopModal] = useState(false);
+  const [openAddShopModal, setOpenAddShopModal] = useState<boolean>(false);
+  const [openAddUser, setOpenAddUser] = useState<boolean>(false);
 
-  const ShopDetailsInfoButton = (params: ICellRendererParams) => {
-    console.log(params, "params");
-    function handleIconClick() {
-      console.log(`Info Button Clicked with: ${params}`);
-    }
+  const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
+  const [infoModalData, setInfoModalData] = useState([]);
 
-    return (
-      <div
-        className="flex h-full justify-center items-center"
-        onClick={handleIconClick}
-      >
-        <img src="/info.svg" />
-      </div>
-    );
-  };
-
-  console.log(ShopList, "shopList");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [colDefs, setColDefs] = useState<ShopColumn[]>([
     { field: "branch_name", flex: 1, headerName: "Branch Name" },
     { field: "location", flex: 1 },
     { field: "opening_date", flex: 1, headerName: "Opening Date" },
     { field: "avg_weekly_profit", flex: 1, headerName: "Avg Weekly Profit" },
-    // { field: "licenses", flex: 1, headerName: "Licenses" },
     { field: "weight_tat", flex: 1, headerName: "AVG Turn Around Time" },
-    {
-      field: "info",
-      flex: 0.5,
-      headerName: "",
-      cellRenderer: ShopDetailsInfoButton,
-    },
   ]);
 
   const rows = useMemo(() => {
@@ -52,10 +34,14 @@ const Sales = () => {
       location: item.location,
       weight_tat: item.weight_tat,
       opening_date: formatDate(item.opening_date),
-      // licenses: item.licenses,
       avg_weekly_profit: item.avg_weekly_profit,
     }));
   }, [ShopList]);
+
+  const onRowClick = (params: ICellRendererParams) => {
+    setOpenInfoModal((prev: boolean) => !prev);
+    setInfoModalData(params.data);
+  };
 
   return (
     <section className="flex w-full ">
@@ -69,6 +55,16 @@ const Sales = () => {
 
           <Button
             variant="contained"
+            color="warning"
+            className="p-1 flex place-items-center"
+            onClick={() => setOpenAddUser((prev: boolean) => !prev)}
+          >
+            <AddIcon />
+            <span className="p-1">employee</span>
+          </Button>
+
+          <Button
+            variant="contained"
             color="info"
             className="p-1 flex place-items-center"
             onClick={() => setOpenAddShopModal((prev: boolean) => !prev)}
@@ -76,15 +72,16 @@ const Sales = () => {
             <AddIcon />
             <span className="p-1">Shop</span>
           </Button>
-
-          {/* <div className="hover:cursor-pointer flex p-2 bg-customPale rounded-full">
-            <AddPrompt />
-          </div> */}
         </div>
         <div id="stock-table" className="w-full mt-4">
-          <ReusableGrid rows={rows} colsDefs={colDefs} />
+          <ReusableGrid
+            rows={rows}
+            colsDefs={colDefs}
+            onRowClick={onRowClick}
+          />
         </div>
       </div>
+
       {openAddShopModal && (
         <GlobalModal
           open={openAddShopModal}
@@ -92,6 +89,31 @@ const Sales = () => {
           children={
             <AddShopForm
               closeModal={() => setOpenAddShopModal((prev: boolean) => !prev)}
+            />
+          }
+        />
+      )}
+
+      {openInfoModal && (
+        <GlobalModal
+          open={openInfoModal}
+          closeFunc={() => setOpenInfoModal((prev: boolean) => !prev)}
+          children={
+            <ShopInfo
+              infoModalData={infoModalData}
+              closeModal={() => setOpenInfoModal((prev: boolean) => !prev)}
+            />
+          }
+        />
+      )}
+
+      {openAddUser && (
+        <GlobalModal
+          open={openAddUser}
+          closeFunc={() => setOpenAddUser((prev: boolean) => !prev)}
+          children={
+            <AddEmployeeForm
+              closeModal={() => setOpenAddUser((prev: boolean) => !prev)}
             />
           }
         />

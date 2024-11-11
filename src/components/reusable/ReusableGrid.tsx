@@ -1,9 +1,18 @@
-import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
-import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { cn } from "@/lib/utils";
+import { ICellRendererParams } from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 
-const ReusableGrid = ({ rows, colsDefs }) => {
+interface ReusableTableProps {
+  rows: unknown;
+  colsDefs: unknown;
+  onRowClick?: unknown;
+}
+
+const ReusableGrid: React.FC<ReusableTableProps> = ({
+  rows,
+  colsDefs,
+  onRowClick,
+}) => {
   // Column Definitions: Defines the columns to be displayed.
 
   return (
@@ -12,7 +21,11 @@ const ReusableGrid = ({ rows, colsDefs }) => {
       className={cn("ag-theme-quartz", "w-full")} // applying the Data Grid theme
       style={{ height: 500, width: "100%" }} // the Data Grid will fill the size of the parent container
     >
-      <AgGridReact rowData={rows} columnDefs={colsDefs} />
+      <AgGridReact
+        rowData={rows}
+        columnDefs={colsDefs}
+        onRowClicked={onRowClick}
+      />
     </div>
   );
 };

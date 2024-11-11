@@ -158,10 +158,6 @@ const Stock = () => {
             <AddIcon />
             <span className="p-1">stock</span>
           </Button>
-
-          {/* <div className="hover:cursor-pointer flex p-2 bg-customPale rounded-full">
-            <AddPrompt />
-          </div> */}
         </div>
 
         <div id="stock-table" className="w-full mt-4">
@@ -186,10 +182,6 @@ const Stock = () => {
           open={openInfoModal}
           closeFunc={() => setOpenInfoModal((prev: boolean) => !prev)}
           children={
-            // <UpdateStockForm
-            //   closeModal={() => setOpenInfoModal((prev: boolean) => !prev)}
-            //   args={updatePayload}
-            // />
             <ManageStock
               closeModal={() => setOpenInfoModal((prev: boolean) => !prev)}
               args={updatePayload}
