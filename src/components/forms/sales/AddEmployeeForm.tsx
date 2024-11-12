@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Loader } from "lucide-react";
+// import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,9 +24,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { CircularProgress } from "@mui/material";
+import { useAddEmployeeMutation } from "@/features/sales/salesAPI";
+import useToasters from "@/components/reusable/toasted/useToasters";
 
 const AddEmployeeForm = ({ closeModal }: AddEmployeeFormProps) => {
+  const { failed, success } = useToasters();
   const { shops, isLoading } = useFetchShops();
+  const [addEmployee] = useAddEmployeeMutation();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -34,12 +39,26 @@ const AddEmployeeForm = ({ closeModal }: AddEmployeeFormProps) => {
       email: "",
       first_name: "",
       last_name: "",
-      shop_id: "",
+      branch_name: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      // Send
+      await addEmployee(values).unwrap();
+      success(
+        `Employee ${
+          values.first_name + " " + values.first_name
+        } successfully added to shop ${values.branch_name}!`
+      );
+    } catch (error) {
+      console.log(error);
+      failed("There was an error processing that request! Please try again.");
+    } finally {
+      closeModal();
+    }
+    // console.log(values);
   }
 
   return (
@@ -96,31 +115,23 @@ const AddEmployeeForm = ({ closeModal }: AddEmployeeFormProps) => {
 
           <FormField
             control={form.control}
-            name="shop_id"
+            name="branch_name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Select Shop</FormLabel>
                 <FormControl>
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose a shop" />
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a shop" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {isLoading ? (
-                        <SelectItem value={""}>
-                          <Loader /> Loading shops...
-                        </SelectItem>
-                      ) : shops.length > 0 ? (
-                        shops.map((shop: ShopType) => (
-                          <SelectItem key={shop.id} value={shop.branch_name}>
+                    <SelectContent className="z-[1400]">
+                      {shops?.map((shop: ShopType, index: number) => {
+                        return (
+                          <SelectItem key={index} value={shop.branch_name}>
                             {shop.branch_name}
                           </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem disabled value={""}>
-                          No shops available
-                        </SelectItem>
-                      )}
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -131,7 +142,10 @@ const AddEmployeeForm = ({ closeModal }: AddEmployeeFormProps) => {
 
           <div className="flex justify-end space-x-2">
             <GlobalCloseButton closeModal={closeModal}>Close</GlobalCloseButton>
-            <GlobalSubmitButton>Submit</GlobalSubmitButton>
+            <GlobalSubmitButton>
+              {isLoading && <CircularProgress size="md" color="inherit" />}
+              <span>Submit</span>
+            </GlobalSubmitButton>
           </div>
         </form>
       </Form>

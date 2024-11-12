@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
 import { CircularProgress } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddShopMutation } from "@/features/sales/salesAPI";
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
+import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
 
 const AddShopForm: React.FC<AddShopProps> = ({ closeModal }) => {
   /***
@@ -131,16 +131,13 @@ const AddShopForm: React.FC<AddShopProps> = ({ closeModal }) => {
             </div>
 
             <div className="flex justify-end">
-              <Button
-                className="bg-custom2 hover:bg-custom2 mr-auto"
-                onClick={() => closeModal()}
-              >
+              <GlobalCloseButton closeModal={() => closeModal()}>
                 <span>Close</span>
-              </Button>
-              <Button className="bg-custom1 hover:bg-customPale" type="submit">
+              </GlobalCloseButton>
+              <GlobalSubmitButton>
                 {isLoading && <CircularProgress size="md" color="inherit" />}
                 <span>Add Shop</span>
-              </Button>
+              </GlobalSubmitButton>
             </div>
           </form>
         </Form>
