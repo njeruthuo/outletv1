@@ -30,10 +30,12 @@ const ShopInfo = ({ closeModal, infoModalData }: ShopInfoProps) => {
               value="Location"
               className="overflow-y-auto min-w-[700px]"
             >
-              <Location
-                name={infoModalData.branch_name}
-                coordinates={infoModalData.coordinates}
-              />
+              {infoModalData && (
+                <Location
+                  name={infoModalData.branch_name}
+                  coordinates={infoModalData.coordinates}
+                />
+              )}
             </TabsContent>
 
             <TabsContent

@@ -16,7 +16,7 @@ const Sales = () => {
   const [openAddUser, setOpenAddUser] = useState<boolean>(false);
 
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
-  const [infoModalData, setInfoModalData] = useState([]);
+  const [infoModalData, setInfoModalData] = useState();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [colDefs, setColDefs] = useState<ShopColumn[]>([
