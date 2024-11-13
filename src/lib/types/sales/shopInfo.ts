@@ -1,8 +1,17 @@
 import { z } from "zod";
 
+export interface InfoModalData {
+  branch_name: string;
+  coordinates: {
+    lat: string;
+    lng: string;
+  };
+}
+
 export interface ShopInfoProps {
+  coordinates?: [];
   closeModal: (args?: boolean) => void;
-  infoModalData: unknown[];
+  infoModalData?: InfoModalData;
 }
 
 export interface AddEmployeeFormProps {

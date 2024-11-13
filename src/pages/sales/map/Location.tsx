@@ -1,8 +1,71 @@
-const Location = () => {
+import {
+  AdvancedMarker,
+  APIProvider,
+  Map,
+  MapCameraChangedEvent,
+  Pin,
+} from "@vis.gl/react-google-maps";
+import { MY_GOOGLE_API_KEY } from "@/lib/constants/constants";
+
+type Poi = { key: string; location: google.maps.LatLngLiteral };
+
+const PoiMarker = ({ pois }: { pois: Poi }) => {
+  return (
+    <AdvancedMarker key={pois.key} position={pois.location}>
+      <Pin background={"#FBBC04"} glyphColor={"#000"} borderColor={"#000"} />
+    </AdvancedMarker>
+  );
+};
+
+interface LocationProps {
+  name: string;
+  coordinates: {
+    lat: string;
+    lng: string;
+  };
+}
+
+const Location = ({ name, coordinates }: LocationProps) => {
+  const lat = parseFloat(coordinates?.lat);
+  const lng = parseFloat(coordinates?.lng);
+
+  // Check if lat and lng are valid numbers
+  const isValidCoordinates = !isNaN(lat) && !isNaN(lng);
+  const shopLocation = {
+    key: name,
+    location: isValidCoordinates
+      ? { lat, lng }
+      : { lat: -33.860664, lng: 151.208138 }, // Default to a valid location
+  };
+
   return (
     <div>
-      <p>Location for this shop</p>
+      <APIProvider apiKey={MY_GOOGLE_API_KEY}>
+        <Map
+          defaultZoom={13}
+          defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
+          initialViewState={{
+            latitude: -33.860664,
+            longitude: 151.208138,
+            zoom: 13,
+          }}
+          mapId={"8d4fcbc72f4d99d7"}
+          style={{ width: "100%", height: "400px" }}
+          onCameraChanged={(ev: MapCameraChangedEvent) =>
+            console.log(
+              "camera changed:",
+              ev.detail.center,
+              "zoom:",
+              ev.detail.zoom
+            )
+          }
+        >
+          {/* <PoiMarkers pois={locations} /> */}
+          <PoiMarker pois={shopLocation} />
+        </Map>
+      </APIProvider>
     </div>
   );
 };
+
 export default Location;

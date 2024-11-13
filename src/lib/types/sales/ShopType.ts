@@ -24,6 +24,7 @@ export interface ShopType {
   weight_tat?: number;
   current_load?: StockItem[];
   stock?: StockItem[];
+  coordinates?: { lat: string; lng: string };
 }
 
 export type ShopColumn = {

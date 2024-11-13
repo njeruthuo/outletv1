@@ -1,8 +1,8 @@
+"use client";
+
 import * as React from "react";
 import { TrendingUp } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
-import { useSelector } from "react-redux";
-import { selectAllCategories } from "@/features/stock/stockSlice";
 
 import {
   Card,
@@ -13,43 +13,54 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+const chartData = [
+  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
+  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
+  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
+  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
+  { browser: "other", visitors: 190, fill: "var(--color-other)" },
+];
 
-export const description = "A donut chart with text";
+const chartConfig = {
+  visitors: {
+    label: "Visitors",
+  },
+  chrome: {
+    label: "Chrome",
+    color: "hsl(var(--chart-1))",
+  },
+  safari: {
+    label: "Safari",
+    color: "hsl(var(--chart-2))",
+  },
+  firefox: {
+    label: "Firefox",
+    color: "hsl(var(--chart-3))",
+  },
+  edge: {
+    label: "Edge",
+    color: "hsl(var(--chart-4))",
+  },
+  other: {
+    label: "Other",
+    color: "hsl(var(--chart-5))",
+  },
+} satisfies ChartConfig;
 
-const getRandomColor = () => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
-
-type Category = {
-  id: number;
-  name: string;
-  amount: number;
-  fill: string;
-};
 export function StockManagement() {
-  const categories = useSelector(selectAllCategories);
-
-  const chartConfig = categories.map((category: Category) => ({
-    [category.name]: { label: category.name, color: getRandomColor() },
-  }));
-
-  const totalCategories = React.useMemo(() => {
-    return categories.reduce((acc, curr: Category) => acc + curr.amount, 0);
-  }, [categories]);
+  const totalVisitors = React.useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
+  }, []);
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Stock Tracking</CardTitle>
+        <CardTitle>Rate of Stock sale | 100 visitors</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -63,9 +74,9 @@ export function StockManagement() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={categories} // Use categories directly
-              dataKey="amount" // Corresponds to the quantity field
-              nameKey="name" // Corresponds to category names
+              data={chartData}
+              dataKey="visitors"
+              nameKey="browser"
               innerRadius={60}
               strokeWidth={5}
             >
@@ -84,14 +95,14 @@ export function StockManagement() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalCategories.toLocaleString()}
+                          {totalVisitors.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Units
+                          Visitors
                         </tspan>
                       </text>
                     );
@@ -107,7 +118,7 @@ export function StockManagement() {
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total stock for the last 6 months
+          Showing total visitors for the last 6 months
         </div>
       </CardFooter>
     </Card>

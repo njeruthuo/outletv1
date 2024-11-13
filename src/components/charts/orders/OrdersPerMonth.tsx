@@ -40,7 +40,7 @@ export function OrdersPerMonth() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Label</CardTitle>
+        <CardTitle>Orders per month</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>

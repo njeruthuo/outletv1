@@ -44,7 +44,7 @@ export function ProductMoveRate() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart - Label</CardTitle>
+        <CardTitle>Products Turn Around Time (TAT)</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
