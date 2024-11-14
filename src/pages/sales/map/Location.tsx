@@ -5,7 +5,10 @@ import {
   MapCameraChangedEvent,
   Pin,
 } from "@vis.gl/react-google-maps";
-import { MY_GOOGLE_API_KEY } from "@/lib/constants/constants";
+import {
+  MY_GOOGLE_API_KEY,
+  MY_GOOGLE_MAP_PUBLIC_ID,
+} from "@/lib/constants/constants";
 
 type Poi = { key: string; location: google.maps.LatLngLiteral };
 
@@ -43,13 +46,13 @@ const Location = ({ name, coordinates }: LocationProps) => {
       <APIProvider apiKey={MY_GOOGLE_API_KEY}>
         <Map
           defaultZoom={13}
-          defaultCenter={{ lat: -33.860664, lng: 151.208138 }}
+          defaultCenter={{ lat: lat, lng: lng }}
           initialViewState={{
-            latitude: -33.860664,
-            longitude: 151.208138,
+            latitude: lat,
+            longitude: lng,
             zoom: 13,
           }}
-          mapId={"8d4fcbc72f4d99d7"}
+          mapId={MY_GOOGLE_MAP_PUBLIC_ID}
           style={{ width: "100%", height: "400px" }}
           onCameraChanged={(ev: MapCameraChangedEvent) =>
             console.log(
