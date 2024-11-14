@@ -36,11 +36,11 @@ const Sales = () => {
       opening_date: formatDate(item.opening_date),
       avg_weekly_profit: item.avg_weekly_profit,
       coordinates: item.coordinates,
+      operators: item.operators,
     }));
   }, [ShopList]);
 
   const onRowClick = (params: ICellRendererParams) => {
-    console.log(params, "params");
     setOpenInfoModal((prev: boolean) => !prev);
     setInfoModalData(params.data);
   };

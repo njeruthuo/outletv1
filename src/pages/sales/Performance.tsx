@@ -1,4 +1,13 @@
+import { StockManagement } from "@/components/charts/stock/StockManagement";
+
 const Performance = () => {
-  return <div>Shop Performance</div>;
+  return (
+    <section style={{ width: "668px", height: "375px" }}>
+
+      <div>
+        <StockManagement />
+      </div>
+    </section>
+  );
 };
 export default Performance;

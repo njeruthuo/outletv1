@@ -50,10 +50,10 @@ const Location = ({ name, coordinates }: LocationProps) => {
           initialViewState={{
             latitude: lat,
             longitude: lng,
-            zoom: 13,
+            zoom: 8,
           }}
           mapId={MY_GOOGLE_MAP_PUBLIC_ID}
-          style={{ width: "100%", height: "400px" }}
+          style={{ width: "668px", height: "407px" }}
           onCameraChanged={(ev: MapCameraChangedEvent) =>
             console.log(
               "camera changed:",
@@ -63,7 +63,6 @@ const Location = ({ name, coordinates }: LocationProps) => {
             )
           }
         >
-          {/* <PoiMarkers pois={locations} /> */}
           <PoiMarker pois={shopLocation} />
         </Map>
       </APIProvider>

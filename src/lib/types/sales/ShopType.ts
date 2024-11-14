@@ -3,6 +3,7 @@ import { ICellRendererParams } from "ag-grid-community";
 
 import { z } from "zod";
 import { StockItem } from "../stock/StockItemTypes";
+import { Operator } from "./shopInfo";
 
 export const AddShopFormSchema = z.object({
   branch_name: z.string().min(2).max(50),
@@ -25,6 +26,7 @@ export interface ShopType {
   current_load?: StockItem[];
   stock?: StockItem[];
   coordinates?: { lat: string; lng: string };
+  operators?: Operator[];
 }
 
 export type ShopColumn = {

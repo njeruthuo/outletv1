@@ -1,11 +1,32 @@
 import { z } from "zod";
 
+export interface Operator {
+  id: number;
+  username: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
+  photo: React.ImgHTMLAttributes<HTMLImageElement> | string;
+}
+
+export interface UserCardType {
+  operator: Operator;
+  onDisable: (args?: unknown) => void;
+}
+
+export interface TeamProps {
+  branch_name: string;
+  team?: Operator[];
+}
+
 export interface InfoModalData {
   branch_name: string;
   coordinates: {
     lat: string;
     lng: string;
   };
+  operators: Operator[];
 }
 
 export interface ShopInfoProps {

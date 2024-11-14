@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const ShopInfo = ({ closeModal, infoModalData }: ShopInfoProps) => {
   console.log(infoModalData, "infoModalData");
   return (
-    <section className="p-4">
+    <section className="p-2">
       <div className="flex justify-center">
         <div className="w-full">
           <Tabs defaultValue="Location" className="space-y-4">
@@ -42,7 +42,12 @@ const ShopInfo = ({ closeModal, infoModalData }: ShopInfoProps) => {
               value="In charge"
               className="p-4 max-h-[70vh] overflow-y-auto"
             >
-              <Team />
+              {infoModalData && (
+                <Team
+                  branch_name={infoModalData?.branch_name}
+                  team={infoModalData.operators}
+                />
+              )}
             </TabsContent>
 
             <TabsContent

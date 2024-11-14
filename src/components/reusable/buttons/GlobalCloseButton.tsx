@@ -12,7 +12,7 @@ const GlobalCloseButton: React.FC<CustomCloseButtonProps> = ({
 }) => {
   return (
     <Button
-      className="bg-custom2 hover:bg-custom2 mr-auto"
+      className="bg-custom2 hover:bg-custom2 mr-auto mt-2"
       onClick={closeModal}
     >
       {children}
