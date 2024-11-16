@@ -6,6 +6,7 @@ const initialState: InitialState = {
   // Remember to change this to false before production.
   isLoggedIn: true,
   token: "",
+  salesMode: false,
 };
 
 export const AuthSlice = createSlice({
@@ -16,7 +17,12 @@ export const AuthSlice = createSlice({
       state.isLoggedIn = false;
       state.token = "";
     },
+
+    toggleSalesMode: (state) => {
+      state.salesMode = !state.salesMode;
+    },
   },
+
   extraReducers: (builder) => {
     builder.addMatcher(
       authApi.endpoints.login.matchFulfilled,
@@ -28,6 +34,6 @@ export const AuthSlice = createSlice({
   },
 });
 
-export const { logout } = AuthSlice.actions;
+export const { logout, toggleSalesMode } = AuthSlice.actions;
 
 export default AuthSlice.reducer;
