@@ -1,9 +1,9 @@
-import { OrdersPerMonth } from "@/components/charts/orders/OrdersPerMonth";
+import { BarChartComponent } from "@/components/charts";
 
 const StockChart = () => {
   return (
     <section style={{ width: "668px", height: "375px" }}>
-      <OrdersPerMonth />
+      <BarChartComponent />
     </section>
   );
 };

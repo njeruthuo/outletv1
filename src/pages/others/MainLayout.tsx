@@ -1,39 +1,52 @@
+import { Sidebar } from "@/components/custom";
+import { useState } from "react";
 import { useSelector } from "react-redux";
+
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { AppSidebar } from "@/components/custom/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
+
+interface State {
+  auth?: {
+    isLoggedIn: boolean;
+  };
+}
 
 const MainLayout = () => {
   const location = useLocation();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector((state: State) => state?.auth?.isLoggedIn);
+  const [showSideMenu, setShowSideMenu] = useState<boolean>(true);
+  const hideMenu = () => setShowSideMenu((prev: boolean) => !prev);
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex h-screen w-full ">
       {isLoggedIn ? (
-        <SidebarProvider>
-          {/* Sidebar */}
-          <div className="w-64">
-            <AppSidebar />
-          </div>
+        <div className="flex-1 overflow-auto">
+          <div className="flex">
+            {showSideMenu && (
+              <div className="w-72 bg-custom1 h-screen text-white">
+                <Sidebar />
+              </div>
+            )}
 
-          {/* Main Content */}
-          <div className="flex-1 flex flex-col">
-            {/* Header Section */}
-            <section className="flex items-center p-4 border-b">
-              <SidebarTrigger />
-              <Separator orientation="vertical" className="mx-2" />
-              <p className="">
-                {location.pathname.substring(1, location.pathname.length - 1)}
-              </p>
-            </section>
-
-            {/* Outlet Content */}
-            <div className="p-4 flex-1 overflow-auto">
+            <div className="p-4 w-full">
+              <div className="flex gap-2 mb-4">
+                <img
+                  className="hover:cursor-pointer"
+                  onClick={hideMenu}
+                  src={showSideMenu ? "/right-open.svg" : "/right-close.svg"}
+                  alt=""
+                />{" "}
+                <span className="border-l border-gray-800 pl-2">
+                  {location.pathname.length > 2
+                    ? location.pathname
+                        .toString()
+                        .substring(1, location.pathname.length - 1)
+                    : "Dashboard"}
+                </span>
+              </div>
               <Outlet />
             </div>
           </div>
-        </SidebarProvider>
+        </div>
       ) : (
         <Navigate to="/sign-in" />
       )}

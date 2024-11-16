@@ -33,7 +33,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function OrdersPerMonth() {
+export function BarChartComponent() {
   return (
     <Card>
       <CardHeader>

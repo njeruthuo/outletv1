@@ -40,7 +40,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ProductMoveRate() {
+export function LineChartComponent() {
   return (
     <Card>
       <CardHeader>

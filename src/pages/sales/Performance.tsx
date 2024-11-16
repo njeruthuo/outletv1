@@ -1,11 +1,10 @@
-import { StockManagement } from "@/components/charts/stock/StockManagement";
+import { PieChartComponent } from "@/components/charts/PieChartComponent";
 
 const Performance = () => {
   return (
     <section style={{ width: "668px", height: "375px" }}>
-
       <div>
-        <StockManagement />
+        <PieChartComponent />
       </div>
     </section>
   );
