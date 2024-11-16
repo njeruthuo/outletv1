@@ -4,6 +4,7 @@ export type StockItem = {
   id?: number;
   last_updated: Date;
   product: {
+    id?: number | string;
     name: string;
     price_per_item: string;
     category: {

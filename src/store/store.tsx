@@ -6,6 +6,7 @@ import AuthReducer from "@/pages/auth/reducers/AuthSlice";
 
 import { salesAPI } from "@/features/sales/salesAPI";
 import { authApi } from "@/pages/auth/reducers/login";
+import saleSliceReducer from "@/features/sales/saleSlice";
 
 import { brandAPI, categoryAPI, stockApi } from "@/features/stock";
 
@@ -20,9 +21,10 @@ export const store = configureStore({
     [categoryAPI.reducerPath]: categoryAPI.reducer,
     [brandAPI.reducerPath]: brandAPI.reducer,
 
+    saleReducer: saleSliceReducer,
     [salesAPI.reducerPath]: salesAPI.reducer,
   },
-  
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authApi.middleware)
