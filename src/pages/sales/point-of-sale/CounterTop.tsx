@@ -1,59 +1,101 @@
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllCounterItems,
-  //   removeItem,
-  //   clearItems,
+  removeAllItems,
+  removeItem,
+  reduceItemQuantity,
+  addItemQuantity,
 } from "@/features/sales/saleSlice";
-import { StockItem } from "@/lib/types/stock/StockItemTypes";
 import { Button } from "@mui/material";
+import { GlobalSubmitButton } from "@/components/reusable";
 
 const CounterTop = () => {
   const dispatch = useDispatch();
-  const allItems: StockItem[] = useSelector(selectAllCounterItems);
+  const allItems = useSelector(selectAllCounterItems);
+
+  console.log(allItems, "allItems");
 
   // Calculate total sale amount
   const totalAmount = allItems?.reduce(
     (total, item) =>
-      total + parseFloat(item.product.price_per_item) * item.quantity,
+      total + parseFloat(item.stock.product.price_per_item) * item.quantity,
     0
   );
 
   // Handler to remove an item
-  //   const handleRemoveItem = (itemId: number) => {
-  //     dispatch(removeItem(itemId));
-  //   };
+  const handleRemoveItem = (itemId: number) => {
+    dispatch(removeItem(itemId));
+  };
 
   // Handler to clear all items
-  //   const handleClearItems = () => {
-  //     dispatch(clearItems());
-  //   };
+  const handleClearItems = () => {
+    dispatch(removeAllItems());
+  };
 
   return (
-    <section className="mx-4 p-4 border rounded-lg shadow-sm bg-white">
-      <h2 className="font-bold text-2xl text-gray-900 mb-4">Sale Counter</h2>
+    <section className="mx-4 p-4 rounded-lg shadow-sm bg-white">
+      <div className="flex justify-between place-items-center">
+        <h2 className="font-bold text-2xl text-gray-900 mb-4">Sale Counter</h2>
+        {allItems.length > 1 ? (
+          <Button
+            variant="contained"
+            color="error"
+            size="medium"
+            onClick={handleClearItems}
+          >
+            Clear All
+          </Button>
+        ) : (
+          <></>
+        )}
+      </div>
 
       {/* List of Sale Items */}
       {allItems.length > 0 ? (
         <ul className="divide-y divide-gray-200">
-          {allItems.map((item: StockItem) => (
-            <li key={item.product.id} className="flex items-center p-4">
+          {allItems.map((item) => (
+            <li key={item.stock.product.id} className="flex items-center py-4">
               {/* Product Details */}
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-800">
-                  {item.product.name}
+                  {item.stock.product.name}
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Price: Kshs. {item.product.price_per_item.toLocaleString()}
+                  Price: Kshs.{" "}
+                  {item.stock.product.price_per_item.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-600">
+                {/* <p className="text-sm text-gray-600">
                   Quantity: {item.quantity}
-                </p>
-                <p className="text-sm text-gray-600">
+                </p> */}
+                <p className="text-[16px] text-green-600 mt-3">
                   Total: Kshs.{" "}
-                  {(
-                    parseFloat(item.product.price_per_item) * item.quantity
-                  ).toLocaleString()}
+                  <span className="font-bold">
+                    {(
+                      parseFloat(item.stock.product.price_per_item) *
+                      item.quantity
+                    ).toLocaleString()}
+                  </span>
                 </p>
+              </div>
+
+              <div id="quantity-control" className="flex-1">
+                <div className="flex place-items-center gap-2">
+                  <GlobalSubmitButton
+                    handleSubmit={() =>
+                      dispatch(reduceItemQuantity(item.stock.product.id))
+                    }
+                  >
+                    <img src="/remove_26dp.svg" alt="" className="w-4" />
+                  </GlobalSubmitButton>
+                  <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                  <GlobalSubmitButton
+                    handleSubmit={() =>
+                      dispatch(addItemQuantity(item.stock.product.id))
+                    }
+                  >
+                    <img src="/add_26.svg" alt="" className="w-4" />
+                  </GlobalSubmitButton>
+                </div>
               </div>
 
               {/* Remove Button */}
@@ -61,7 +103,7 @@ const CounterTop = () => {
                 variant="outlined"
                 color="error"
                 size="small"
-                // onClick={() => handleRemoveItem(item.product.id)}
+                onClick={() => handleRemoveItem(item.stock.product.id)}
               >
                 Remove
               </Button>
@@ -78,16 +120,19 @@ const CounterTop = () => {
       {allItems.length > 0 && (
         <div className="mt-6">
           <div className="flex justify-between items-center">
-            <h3 className="font-bold text-xl text-gray-800">
-              Total Amount: Kshs. {totalAmount.toLocaleString()}
+            <h3 className="font-bold text-lg text-gray-700">
+              Total Amount:{" "}
+              <span className="text-xl text-blue-500">
+                Kshs. {totalAmount.toLocaleString()}
+              </span>
             </h3>
             <Button
               variant="contained"
               color="primary"
               size="medium"
-              //   onClick={handleClearItems}
+              onClick={handleClearItems}
             >
-              Clear All
+              Checkout
             </Button>
           </div>
         </div>

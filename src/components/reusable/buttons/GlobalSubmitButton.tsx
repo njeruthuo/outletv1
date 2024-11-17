@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 interface ButtonProps {
   children: ReactNode;
-  handleSubmit?: (args?: unknown) => void;
+  handleSubmit?: (args?: unknown, args2?: unknown, args3?: unknown) => void;
 }
 
 const GlobalSubmitButton: React.FC<ButtonProps> = ({
