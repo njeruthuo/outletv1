@@ -1,5 +1,6 @@
 import PosXSales from "./PosXSales";
-export { PosXSales };
+import Checkout from "./point-of-sale/Checkout";
+export { PosXSales,Checkout };
 
 export interface State {
   auth?: {
