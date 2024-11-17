@@ -9,9 +9,12 @@ import { authApi } from "@/pages/auth/reducers/login";
 import saleSliceReducer from "@/features/sales/saleSlice";
 
 import { brandAPI, categoryAPI, stockApi } from "@/features/stock";
+import { darajaAPI } from "@/features/sales/daraja/authorization";
 
 export const store = configureStore({
   reducer: {
+    [darajaAPI.reducerPath]: darajaAPI.reducer,
+
     auth: AuthReducer,
     [authApi.reducerPath]: authApi.reducer,
 
@@ -31,7 +34,8 @@ export const store = configureStore({
       .concat(categoryAPI.middleware)
       .concat(brandAPI.middleware)
       .concat(salesAPI.middleware)
-      .concat(stockApi.middleware),
+      .concat(stockApi.middleware)
+      .concat(darajaAPI.middleware),
 });
 
 setupListeners(store.dispatch);
