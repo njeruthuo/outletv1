@@ -1,30 +1,131 @@
-import { GlobalCloseButton } from "@/components/reusable";
-import { useGetAccessTokensQuery } from "@/features/sales/daraja/authorization";
-import { useEffect } from "react";
+import { Button, CircularProgress } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
+import { removeItem, selectAllCounterItems } from "@/features/sales/saleSlice";
+import { useState } from "react";
+import { useRequestPaymentOnSaleMutation } from "@/features/sales/salesAPI";
 
 interface CheckoutProps {
   closeModal: (args?: unknown) => void;
 }
 
 const Checkout = ({ closeModal }: CheckoutProps) => {
-  const { data, error, isLoading } = useGetAccessTokensQuery([]);
+  const dispatch = useDispatch();
+  const allItems = useSelector(selectAllCounterItems);
+  const [payeeNumber, setPayeeNumber] = useState<string>("");
+  const [requestPaymentOnSale, isLoading] = useRequestPaymentOnSaleMutation();
 
-  useEffect(() => {
-    if (data) {
-      console.log("Access Token:", data);
+  const totalAmount = allItems?.reduce(
+    (total, item) =>
+      total + parseFloat(item.stock.product.price_per_item) * item.quantity,
+    0
+  );
+
+  const handleRemoveItem = (itemId: number) => {
+    if (allItems.length <= 1) {
+      closeModal(); // Close the modal if this is the last item
     }
-  }, [data]);
+    dispatch(removeItem(itemId));
+  };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error fetching access token</p>;
+  const handleRequestPayments = async () => {
+    if (payeeNumber) {
+      try {
+        await requestPaymentOnSale({
+          phone_number: payeeNumber,
+          amount: totalAmount,
+        }).unwrap();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
-    <div>
-      <span>Checkout</span>
+    <div className="w-[650px]">
+      <h2 className="font-bold text-custom1 text-2xl flex place-items-center gap-2 my-2">
+        <span>Checkout </span>
+        <img src="/cart_checkout.svg" alt="cart_checkout" />
+      </h2>
       <div>
-        <h3>M-Pesa Access Token</h3>
-        <p>{data?.access_token}</p>
+        <p>
+          You are about to checkout{" "}
+          {allItems.length > 1 ? "these products" : "this product"}
+        </p>
+        {allItems.map((item) => (
+          <li key={item.stock.product.id} className="flex items-center py-3">
+            {/* Product Details */}
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-800">
+                {item.stock.product.name}
+              </h3>
+              <p className="text-sm text-gray-600">
+                Price: Kshs.{" "}
+                {item.stock.product.price_per_item.toLocaleString()}
+              </p>
+              <p className="text-[16px] text-green-600 mt-3">
+                Total: Kshs.{" "}
+                <span className="font-bold">
+                  {(
+                    parseFloat(item.stock.product.price_per_item) *
+                    item.quantity
+                  ).toLocaleString()}
+                </span>
+              </p>
+            </div>
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              onClick={() => handleRemoveItem(item.stock.product.id)}
+            >
+              Remove
+            </Button>
+          </li>
+        ))}
+        <div className="mt-5 flex place-items-center">
+          <div className="w-1/4">
+            <p className="text-[18px] mt-3">
+              Pay{" "}
+              <span className="text-[18px] underline text-custom1 font-bold">
+                Kshs. {totalAmount}
+              </span>{" "}
+              from
+            </p>
+          </div>
+
+          <div className="flex-1">
+            <div className="flex justify-center">
+              <img src="/double_arrow.svg" alt="" />
+            </div>
+          </div>
+
+          <div className="mt-4 w-1/3 flex flex-col">
+            <label
+              htmlFor="phoneNumber"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Enter your phone number
+            </label>
+            <input
+              id="phoneNumber"
+              value={payeeNumber}
+              onChange={(e) => setPayeeNumber(e.target.value)}
+              type="tel"
+              pattern="[0-9]{10}" // Optional: Enforces a 10-digit number format
+              placeholder="07XXXXXXXX"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-0 focus:ring-green-600 focus:outline-none focus:border-green-600 text-[16px]"
+            />
+          </div>
+        </div>
       </div>
-      <GlobalCloseButton closeModal={closeModal}>close</GlobalCloseButton>
+      <div className="flex place-items-center mt-1">
+        <GlobalCloseButton closeModal={closeModal}>close</GlobalCloseButton>
+        <GlobalSubmitButton handleSubmit={handleRequestPayments}>
+          <span>Request payment</span>
+          {isLoading && <CircularProgress size="md" color="inherit" />}
+        </GlobalSubmitButton>
+      </div>
     </div>
   );
 };

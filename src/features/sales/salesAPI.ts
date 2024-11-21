@@ -31,6 +31,14 @@ export const salesAPI = createApi({
       }),
       invalidatesTags: ["Sales"],
     }),
+
+    requestPaymentOnSale: builder.mutation({
+      query: (values) => ({
+        url: "external/initiate-payment/",
+        method: "POST",
+        body: values,
+      }),
+    }),
   }),
 });
 
@@ -38,4 +46,5 @@ export const {
   useGetShopListQuery,
   useAddShopMutation,
   useAddEmployeeMutation,
+  useRequestPaymentOnSaleMutation,
 } = salesAPI;
