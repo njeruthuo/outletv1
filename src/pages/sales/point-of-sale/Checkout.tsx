@@ -5,6 +5,13 @@ import { removeItem, selectAllCounterItems } from "@/features/sales/saleSlice";
 import { useState } from "react";
 import { useRequestPaymentOnSaleMutation } from "@/features/sales/salesAPI";
 
+/**
+ * TODO: send transaction success message to the user after a successful transaction and clear the cart.
+ * Ensure all transactions are logged in the database.
+ * Prepare the screen for another sale.
+ * Send sms to the buyer to notify of points awarded (per receipt) and Thanks for shopping with Rapid Rack!
+ */
+
 interface CheckoutProps {
   closeModal: (args?: unknown) => void;
 }
@@ -123,7 +130,7 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
         <GlobalCloseButton closeModal={closeModal}>close</GlobalCloseButton>
         <GlobalSubmitButton handleSubmit={handleRequestPayments}>
           <span>Request payment</span>
-          {isLoading && <CircularProgress size="md" color="inherit" />}
+          {!isLoading && <CircularProgress size="md" color="inherit" />}
         </GlobalSubmitButton>
       </div>
     </div>
