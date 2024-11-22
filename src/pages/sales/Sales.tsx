@@ -27,6 +27,8 @@ const Sales = () => {
     { field: "weight_tat", flex: 1, headerName: "AVG Turn Around Time" },
   ]);
 
+  // console.log(ShopList, "ShopList");
+
   const rows = useMemo(() => {
     return ShopList?.map((item: ShopType) => ({
       id: item.id,
@@ -37,6 +39,7 @@ const Sales = () => {
       avg_weekly_profit: item.avg_weekly_profit,
       coordinates: item.coordinates,
       operators: item.operators,
+      stock: item.stock,
     }));
   }, [ShopList]);
 

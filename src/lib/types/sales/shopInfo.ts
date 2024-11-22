@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { StockItem } from "../stock/StockItemTypes";
 
 export interface Operator {
   id: number;
@@ -27,6 +28,7 @@ export interface InfoModalData {
     lng: string;
   };
   operators: Operator[];
+  stock?: StockItem[];
 }
 
 export interface ShopInfoProps {

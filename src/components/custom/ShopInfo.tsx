@@ -54,7 +54,9 @@ const ShopInfo = ({ closeModal, infoModalData }: ShopInfoProps) => {
               value="Stock"
               className="p-4 max-h-[70vh] overflow-y-auto"
             >
-              <StockChart />
+              {infoModalData?.stock && (
+                <StockChart stock={infoModalData?.stock} />
+              )}
             </TabsContent>
 
             <TabsContent

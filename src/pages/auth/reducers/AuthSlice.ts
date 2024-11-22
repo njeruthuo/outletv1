@@ -4,8 +4,8 @@ import { authApi } from "./login";
 
 const initialState: InitialState = {
   // Remember to change this to false before production.
-  isLoggedIn: true,
-  token: "",
+  isLoggedIn: localStorage.getItem("authToken") !== "",
+  token: localStorage.getItem("authToken") || "",
   salesMode: false,
 };
 
@@ -16,6 +16,7 @@ export const AuthSlice = createSlice({
     logout: (state) => {
       state.isLoggedIn = false;
       state.token = "";
+      localStorage.removeItem("authToken");
     },
 
     toggleSalesMode: (state) => {
@@ -29,6 +30,7 @@ export const AuthSlice = createSlice({
       (state, { payload }) => {
         state.isLoggedIn = true;
         state.token = payload.token;
+        localStorage.setItem("authToken", payload.token);
       }
     );
   },
