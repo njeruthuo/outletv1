@@ -12,14 +12,14 @@ const GlobalSubmitButton: React.FC<ButtonProps> = ({
 }) => {
   return handleSubmit ? (
     <Button
-      className="bg-custom1 hover:bg-customPale"
+      className="bg-custom1 hover:bg-customPale flex place-items-center"
       type="submit"
       onClick={handleSubmit}
     >
       {children}
     </Button>
   ) : (
-    <Button className="bg-custom1 hover:bg-customPale" type="submit">
+    <Button className="bg-custom1 hover:bg-customPale flex place-items-center" type="submit">
       {children}
     </Button>
   );
