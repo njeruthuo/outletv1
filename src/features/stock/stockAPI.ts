@@ -1,5 +1,6 @@
 import { baseURL } from "@/lib/constants/GlobalURL";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { salesAPI } from "../sales/salesAPI";
 
 export const stockApi = createApi({
   reducerPath: "stockApi",
@@ -49,6 +50,22 @@ export const stockApi = createApi({
         body: { disburseQuantity, product_name, shop },
       }),
       invalidatesTags: ["Stock"],
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        try {
+          // Wait for the disbursement to complete
+          await queryFulfilled;
+
+          // Trigger refetch or invalidate on salesAPI
+          dispatch(
+            salesAPI.util.invalidateTags(["Shop"]) // Invalidate Shop tags to trigger refetch
+          );
+
+          // Alternatively, if you want to trigger a query (e.g., refetch getShopList):
+          // dispatch(salesAPI.endpoints.getShopList.initiate());
+        } catch (error) {
+          console.error("Error disbursing stock: ", error);
+        }
+      },
     }),
 
     // Handle searching
@@ -65,5 +82,5 @@ export const {
   useUpdateStockMutation,
   useDeleteStockMutation,
   useSearchStockQuery,
-  useDisburseToShopMutation
+  useDisburseToShopMutation,
 } = stockApi;

@@ -9,7 +9,7 @@ export const salesAPI = createApi({
     // Get a list of shops
     getShopList: builder.query({
       query: () => "shop/shop_api_view/",
-      providesTags: ["Sales"],
+      providesTags: ["Sales", "Shop"],
     }),
 
     // Create a new shop
