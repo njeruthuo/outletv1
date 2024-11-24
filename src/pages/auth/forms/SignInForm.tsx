@@ -38,6 +38,7 @@ const SignInForm = () => {
         description: "You will be redirected shortly",
       });
       navigate("/");
+      // console.log(result);
 
       return result;
     } catch (error) {

@@ -65,7 +65,9 @@ const MainLayout = () => {
                   <div className="hover:cursor-pointer">
                     <GlobalPopOver
                       children={<ProfileInfoPop />}
-                      trigger={<img src="/account_circle.svg" className="h-6" alt="" />}
+                      trigger={
+                        <img src="/account_circle.svg" className="h-6" alt="" />
+                      }
                       contentClassName="w-full"
                     />
                   </div>

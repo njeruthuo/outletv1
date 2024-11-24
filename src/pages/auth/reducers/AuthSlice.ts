@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { InitialState } from "../types";
 import { authApi } from "./login";
+import { AccessLevelEvaluator } from "@/utils/rank";
 
 const initialState: InitialState = {
   // Remember to change this to false before production.
   isLoggedIn: localStorage.getItem("authToken") !== "",
   token: localStorage.getItem("authToken") || "",
   salesMode: false,
+  access_level: AccessLevelEvaluator(),
 };
 
 export const AuthSlice = createSlice({
@@ -17,6 +19,7 @@ export const AuthSlice = createSlice({
       state.isLoggedIn = false;
       state.token = "";
       localStorage.removeItem("authToken");
+      localStorage.removeItem("accessLevel");
     },
 
     toggleSalesMode: (state) => {
@@ -28,9 +31,12 @@ export const AuthSlice = createSlice({
     builder.addMatcher(
       authApi.endpoints.login.matchFulfilled,
       (state, { payload }) => {
+        console.log(payload, "payload");
         state.isLoggedIn = true;
         state.token = payload.token;
+        state.access_level = payload.access;
         localStorage.setItem("authToken", payload.token);
+        localStorage.setItem("accessLevel", payload.access);
       }
     );
   },
