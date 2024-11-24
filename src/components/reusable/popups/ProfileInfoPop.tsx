@@ -1,21 +1,22 @@
-import GlobalCloseButton from "../buttons/GlobalCloseButton";
-import GlobalSubmitButton from "../buttons/GlobalSubmitButton";
 import { BellRing } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
+import { logout } from "@/pages/auth/reducers/AuthSlice";
+import { useDispatch } from "react-redux";
 
 const ProfileInfoPop = () => {
+  const dispatch = useDispatch();
   const [switchOpen, setSwitchOpen] = useState(false);
   const handleSwitch = () => {
     setSwitchOpen((prev: boolean) => !prev);
+    dispatch(logout());
   };
 
   return (
@@ -36,13 +37,19 @@ const ProfileInfoPop = () => {
                 You will be able to log in again.
               </p>
             </div>
-            <Switch value={switchOpen} onClick={handleSwitch} />
+            <Switch
+              className={`${
+                switchOpen ? "bg-custom1" : "bg-gray-300"
+              } transition-colors duration-200`}
+              checked={switchOpen}
+              onCheckedChange={handleSwitch}
+            />
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between place-items-center">
+        {/* <CardFooter className="flex justify-between place-items-center">
           <GlobalCloseButton>Cancel</GlobalCloseButton>
           <GlobalSubmitButton>Deploy</GlobalSubmitButton>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
     </div>
   );

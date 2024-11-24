@@ -44,10 +44,11 @@ const MainLayout = () => {
                     ? location.pathname.split("/")[1]
                     : "Dashboard"}
                 </span>
-                <div className="mr-3 ml-auto">
+                <div className="mr-3 ml-auto flex gap-4">
                   {location.pathname.toString().includes("sales") && (
                     <div>
                       <div className=" flex gap-2 place-items-center">
+                        <span>Sales Mode</span>
                         <Switch
                           style={{
                             backgroundColor: auth.salesMode
@@ -57,7 +58,6 @@ const MainLayout = () => {
                           checked={auth.salesMode}
                           onCheckedChange={switchMode}
                         />{" "}
-                        <span>Sales Mode</span>
                       </div>
                     </div>
                   )}
@@ -65,7 +65,7 @@ const MainLayout = () => {
                   <div className="hover:cursor-pointer">
                     <GlobalPopOver
                       children={<ProfileInfoPop />}
-                      trigger={<img src="/account_circle.svg" alt="" />}
+                      trigger={<img src="/account_circle.svg" className="h-6" alt="" />}
                       contentClassName="w-full"
                     />
                   </div>
