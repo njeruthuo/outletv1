@@ -60,7 +60,7 @@ export function BarChartComponent({
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value /** */}
+              tickFormatter={(value) => value.split(" ")[0]}
             />
             <ChartTooltip
               cursor={false}

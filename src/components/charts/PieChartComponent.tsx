@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { TrendingUp } from "lucide-react";
-import { Label, Pie, PieChart } from "recharts";
+// import { TrendingUp } from "lucide-react";
+import { Cell, Label, Pie, PieChart } from "recharts";
 
 import {
   Card,
@@ -18,13 +18,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 190, fill: "var(--color-other)" },
-];
 
 const chartConfig = {
   visitors: {
@@ -52,16 +45,44 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function PieChartComponent() {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
+type Data = {
+  label: string;
+  value: number;
+  color?: string;
+};
+
+interface PieChartComponentTypes {
+  data?: Data[];
+  title?: string;
+  centerLabel: string;
+  titleDescription?: string;
+  summaryHeader?: string;
+  summaryDescription?: string;
+}
+
+const data = [
+  { label: "Completed", value: 400, color: "#0088FE" },
+  { label: "Pending", value: 300, color: "#00C49F" },
+];
+
+export function PieChartComponent({
+  // data,
+  title,
+  titleDescription,
+  centerLabel,
+  summaryDescription,
+  summaryHeader,
+}: PieChartComponentTypes) {
+  console.log(data);
+  const totalCount = React.useMemo(() => {
+    return data.reduce((acc, curr) => acc + curr.value, 0);
   }, []);
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Rate of Stock sale | 100 visitors</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{titleDescription}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -74,9 +95,10 @@ export function PieChartComponent() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              // fill="green"
+              data={data}
+              dataKey="value"
+              nameKey="label"
               innerRadius={60}
               strokeWidth={5}
             >
@@ -95,30 +117,36 @@ export function PieChartComponent() {
                           y={viewBox.cy}
                           className="fill-foreground text-3xl font-bold"
                         >
-                          {totalVisitors.toLocaleString()}
+                          {totalCount.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          {/* Visitors */}
+                          {centerLabel}
                         </tspan>
                       </text>
                     );
                   }
                 }}
               />
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
             </Pie>
           </PieChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
+          {summaryHeader}
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          {/* Showing total visitors for the last 6 months */}
+          {summaryDescription}
         </div>
       </CardFooter>
     </Card>

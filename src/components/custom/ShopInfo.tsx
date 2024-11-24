@@ -5,7 +5,6 @@ import { ShopInfoProps } from "@/lib/types/sales/shopInfo";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const ShopInfo = ({ closeModal, infoModalData }: ShopInfoProps) => {
-  console.log(infoModalData, "infoModalData");
   return (
     <section className="p-2">
       <div className="flex justify-center">
