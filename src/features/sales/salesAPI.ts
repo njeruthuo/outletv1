@@ -1,13 +1,30 @@
 import { baseURL } from "@/lib/constants/GlobalURL";
+import { RootState } from "@/store/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const salesAPI = createApi({
   reducerPath: "salesAPI",
-  baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: baseURL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+
+      return headers;
+    },
+  }),
   tagTypes: ["Sales", "Shop"],
   endpoints: (builder) => ({
     // Get a list of shops
     getShopList: builder.query({
+      query: () => "shop/shop_api_view/",
+      providesTags: ["Sales", "Shop"],
+    }),
+
+    // Get the shop associated with a particular Employee.
+    getEmployeeShop: builder.query({
       query: () => "shop/shop_api_view/",
       providesTags: ["Sales", "Shop"],
     }),
@@ -32,6 +49,7 @@ export const salesAPI = createApi({
       invalidatesTags: ["Sales"],
     }),
 
+    // Initiate a payment request to the backend
     requestPaymentOnSale: builder.mutation({
       query: (values) => ({
         url: "external/initiate-payment/",

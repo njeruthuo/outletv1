@@ -73,7 +73,6 @@ export function PieChartComponent({
   summaryDescription,
   summaryHeader,
 }: PieChartComponentTypes) {
-  console.log(data);
   const totalCount = React.useMemo(() => {
     return data.reduce((acc, curr) => acc + curr.value, 0);
   }, []);

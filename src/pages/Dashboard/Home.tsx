@@ -1,18 +1,42 @@
 import { useGetStockItemsQuery } from "@/features/stock/stockAPI";
+import { useGetShopListQuery } from "@/features/sales/salesAPI";
 import { StockItem } from "@/lib/types/stock/StockItemTypes";
+import { useSelector } from "react-redux";
+import { Box, Grid } from "@mui/material";
+import { RootState } from "@/store/store";
 import {
   BarChartComponent,
   LineChartComponent,
   PieChartComponent,
 } from "@/components/charts";
-import { Box, Grid } from "@mui/material";
+import { useMemo } from "react";
 
 const Home = () => {
-  const { data: StockItemTypes } = useGetStockItemsQuery([]);
+  const user_level = useSelector((state: RootState) => state.auth.access_level);
+  const { data: StockItems } = useGetStockItemsQuery([]);
+  const { data: ShopList } = useGetShopListQuery([]);
 
-  const prop_data = StockItemTypes?.map((item: StockItem) => {
-    return { label: item.product.name, value: item.quantity };
-  });
+  const prop_data = useMemo(() => {
+    if (user_level == "Admin") {
+      return StockItems?.map((item: StockItem) => {
+        return { label: item.product.name, value: item.quantity };
+      });
+    }
+
+    if (user_level == "Employee") {
+      return ShopList?.map((item: StockItem) => {
+        return { label: item.product.name, value: item.quantity };
+      });
+    }
+
+    if (user_level == "Manager") {
+      // Handle the manager's logic properly here...
+      return ShopList?.map((item: StockItem) => {
+        return { label: item.product.name, value: item.quantity };
+      });
+    }
+  }, [user_level, ShopList, StockItems]);
+
   return (
     <section className="w-full mt-4">
       <div className="product-availability">
