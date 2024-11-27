@@ -1,11 +1,12 @@
-import { Sidebar } from "@/components/custom";
-import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+
+
+import { RootState } from "@/store/store";
+import { Sidebar } from "@/components/custom";
+import { Switch } from "@/components/ui/switch";
 import { toggleSalesMode } from "../auth/reducers/AuthSlice";
-import { State } from "../sales";
 import GlobalPopOver from "@/components/reusable/GlobalPopOver";
 import ProfileInfoPop from "@/components/reusable/popups/ProfileInfoPop";
 
@@ -14,15 +15,14 @@ const MainLayout = () => {
   const dispatch = useDispatch();
 
   const switchMode = () => dispatch(toggleSalesMode());
-
-  const auth = useSelector((state: State) => state?.auth);
+  const auth = useSelector((state: RootState) => state.auth);
 
   const [showSideMenu, setShowSideMenu] = useState<boolean>(true);
   const hideMenu = () => setShowSideMenu((prev: boolean) => !prev);
 
   return (
     <div className="flex h-screen w-full place-items-center">
-      {auth?.isLoggedIn ? (
+      {auth.isLoggedIn ? (
         <div className="flex-1 overflow-auto">
           <div className="flex">
             {showSideMenu && (
