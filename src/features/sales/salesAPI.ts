@@ -17,7 +17,7 @@ export const salesAPI = createApi({
   }),
   tagTypes: ["Sales", "Shop"],
   endpoints: (builder) => ({
-    // Get a list of shops
+    // Get a list of shops.
     getShopList: builder.query({
       query: () => "shop/shop_api_view/",
       providesTags: ["Sales", "Shop"],
@@ -39,7 +39,7 @@ export const salesAPI = createApi({
       invalidatesTags: ["Sales"],
     }),
 
-    // Add an employee to shop
+    // Add an employee to shop.
     addEmployee: builder.mutation({
       query: (values) => ({
         url: "users/register_new_employees/",
@@ -49,10 +49,19 @@ export const salesAPI = createApi({
       invalidatesTags: ["Sales"],
     }),
 
-    // Initiate a payment request to the backend
+    // Initiate a payment request to the backend.
     requestPaymentOnSale: builder.mutation({
       query: (values) => ({
         url: "external/initiate-payment/",
+        method: "POST",
+        body: values,
+      }),
+    }),
+
+    // Initiate stock and profit calculation.
+    completeSaleRequest: builder.mutation({
+      query: (values) => ({
+        url: "external/complete-purchase-calculations/",
         method: "POST",
         body: values,
       }),
@@ -64,5 +73,6 @@ export const {
   useGetShopListQuery,
   useAddShopMutation,
   useAddEmployeeMutation,
+  useCompleteSaleRequestMutation,
   useRequestPaymentOnSaleMutation,
 } = salesAPI;

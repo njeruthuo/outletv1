@@ -8,6 +8,7 @@ import {
 } from "@/features/sales/saleSlice";
 import { useState } from "react";
 import { useRequestPaymentOnSaleMutation } from "@/features/sales/salesAPI";
+import { useMpesaTransaction } from "@/features/sales/daraja/useMpesaTransaction";
 
 /**
  * TODO: send transaction success message to the user after a successful transaction and clear the cart.
@@ -20,12 +21,34 @@ interface CheckoutProps {
   closeModal: (args?: unknown) => void;
 }
 
+interface MpesaResponseType {
+  CheckoutRequestID: string;
+  CustomerMessage: string;
+  MerchantRequestID: string;
+  ResponseCode: string;
+  ResponseDescription: string;
+}
+
 const Checkout = ({ closeModal }: CheckoutProps) => {
   const dispatch = useDispatch();
   const allItems = useSelector(selectAllCounterItems);
   const [payeeNumber, setPayeeNumber] = useState<string>("");
   const [requestPaymentOnSale, { isLoading }] =
     useRequestPaymentOnSaleMutation();
+
+  const [response, setResponse] = useState<MpesaResponseType>({
+    CheckoutRequestID: "",
+    CustomerMessage: "",
+    MerchantRequestID: "",
+    ResponseCode: "",
+    ResponseDescription: "",
+  });
+
+  const transactionStatus = useMpesaTransaction(response.MerchantRequestID);
+
+  console.log(response, "response");
+
+  console.log(transactionStatus, "transactionStatus");
 
   const totalAmount = allItems?.reduce(
     (total, item) =>
@@ -54,6 +77,13 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
         ) {
           closeModal();
           // dispatch(removeAllItems());
+          setResponse({
+            CheckoutRequestID: response.CheckoutRequestID || "",
+            CustomerMessage: response.CustomerMessage || "",
+            MerchantRequestID: response.MerchantRequestID || "",
+            ResponseCode: response.ResponseCode || "",
+            ResponseDescription: response.ResponseDescription || "",
+          });
         }
       } catch (error) {
         console.log(error);
