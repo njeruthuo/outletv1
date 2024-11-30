@@ -1,10 +1,22 @@
-import { baseURL } from "@/lib/constants/GlobalURL";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseURL } from "@/lib/constants/GlobalURL";
 import { salesAPI } from "../sales/salesAPI";
+import { RootState } from "@/store/store";
 
 export const stockApi = createApi({
   reducerPath: "stockApi",
-  baseQuery: fetchBaseQuery({ baseUrl: baseURL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: baseURL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
+      
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+
+      return headers;
+    },
+  }),
   tagTypes: ["Stock"],
   endpoints: (builder) => ({
     // Fetch a list of stock items

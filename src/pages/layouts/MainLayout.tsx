@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-
 import { RootState } from "@/store/store";
 import { Sidebar } from "@/components/custom";
 import { Switch } from "@/components/ui/switch";
@@ -38,29 +37,32 @@ const MainLayout = () => {
                   onClick={hideMenu}
                   src={showSideMenu ? "/right-open.svg" : "/right-close.svg"}
                   alt=""
-                />{" "}
+                />
+
                 <span className=" pl-2">
                   {location.pathname.length > 2
                     ? location.pathname.split("/")[1]
                     : "Dashboard"}
                 </span>
+
                 <div className="mr-3 ml-auto flex gap-4">
-                  {location.pathname.toString().includes("sales") && (
-                    <div>
-                      <div className=" flex gap-2 place-items-center">
-                        <span>Sales Mode</span>
-                        <Switch
-                          style={{
-                            backgroundColor: auth.salesMode
-                              ? "#00AF54"
-                              : "#905C3F",
-                          }}
-                          checked={auth.salesMode}
-                          onCheckedChange={switchMode}
-                        />{" "}
+                  {location.pathname.toString().includes("sales") &&
+                    auth.access_level !== "Employee" && (
+                      <div>
+                        <div className=" flex gap-2 place-items-center">
+                          <span>Sales Mode</span>
+                          <Switch
+                            style={{
+                              backgroundColor: auth.salesMode
+                                ? "#00AF54"
+                                : "#905C3F",
+                            }}
+                            checked={auth.salesMode}
+                            onCheckedChange={switchMode}
+                          />{" "}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   <div className="hover:cursor-pointer">
                     <GlobalPopOver

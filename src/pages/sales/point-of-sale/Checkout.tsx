@@ -1,7 +1,11 @@
 import { Button, CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
-import { removeItem, selectAllCounterItems } from "@/features/sales/saleSlice";
+import {
+  removeItem,
+  selectAllCounterItems,
+  // removeAllItems,
+} from "@/features/sales/saleSlice";
 import { useState } from "react";
 import { useRequestPaymentOnSaleMutation } from "@/features/sales/salesAPI";
 
@@ -20,7 +24,8 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
   const dispatch = useDispatch();
   const allItems = useSelector(selectAllCounterItems);
   const [payeeNumber, setPayeeNumber] = useState<string>("");
-  const [requestPaymentOnSale, isLoading] = useRequestPaymentOnSaleMutation();
+  const [requestPaymentOnSale, { isLoading }] =
+    useRequestPaymentOnSaleMutation();
 
   const totalAmount = allItems?.reduce(
     (total, item) =>
@@ -35,13 +40,21 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
     dispatch(removeItem(itemId));
   };
 
-  const handleRequestPayments = async () => {
+  const handlePaymentRequests = async () => {
     if (payeeNumber) {
       try {
-        await requestPaymentOnSale({
+        const response = await requestPaymentOnSale({
           phone_number: payeeNumber,
           amount: totalAmount,
         }).unwrap();
+
+        if (
+          response.ResponseDescription ==
+          "Success. Request accepted for processing"
+        ) {
+          closeModal();
+          // dispatch(removeAllItems());
+        }
       } catch (error) {
         console.log(error);
       }
@@ -128,9 +141,9 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
       </div>
       <div className="flex place-items-center mt-1">
         <GlobalCloseButton closeModal={closeModal}>close</GlobalCloseButton>
-        <GlobalSubmitButton handleSubmit={handleRequestPayments}>
+        <GlobalSubmitButton handleSubmit={handlePaymentRequests}>
           <span>Request payment</span>
-          {!isLoading && <CircularProgress size="md" color="inherit" />}
+          {isLoading && <CircularProgress size="md" color="inherit" />}
         </GlobalSubmitButton>
       </div>
     </div>
