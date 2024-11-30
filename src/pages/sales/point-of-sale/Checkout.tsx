@@ -7,8 +7,11 @@ import {
   // removeAllItems,
 } from "@/features/sales/saleSlice";
 import { useState } from "react";
-import { useRequestPaymentOnSaleMutation } from "@/features/sales/salesAPI";
-import { useMpesaTransaction } from "@/features/sales/daraja/useMpesaTransaction";
+import {
+  useCompleteSaleRequestMutation,
+  useRequestPaymentOnSaleMutation,
+} from "@/features/sales/salesAPI";
+// import { useMpesaTransaction } from "@/features/sales/daraja/useMpesaTransaction";
 
 /**
  * TODO: send transaction success message to the user after a successful transaction and clear the cart.
@@ -21,13 +24,13 @@ interface CheckoutProps {
   closeModal: (args?: unknown) => void;
 }
 
-interface MpesaResponseType {
-  CheckoutRequestID: string;
-  CustomerMessage: string;
-  MerchantRequestID: string;
-  ResponseCode: string;
-  ResponseDescription: string;
-}
+// interface MpesaResponseType {
+//   CheckoutRequestID: string;
+//   CustomerMessage: string;
+//   MerchantRequestID: string;
+//   ResponseCode: string;
+//   ResponseDescription: string;
+// }
 
 const Checkout = ({ closeModal }: CheckoutProps) => {
   const dispatch = useDispatch();
@@ -36,19 +39,18 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
   const [requestPaymentOnSale, { isLoading }] =
     useRequestPaymentOnSaleMutation();
 
-  const [response, setResponse] = useState<MpesaResponseType>({
-    CheckoutRequestID: "",
-    CustomerMessage: "",
-    MerchantRequestID: "",
-    ResponseCode: "",
-    ResponseDescription: "",
-  });
+  const [completeSaleRequest, { isLoading: loading_complete_sale }] =
+    useCompleteSaleRequestMutation();
 
-  const transactionStatus = useMpesaTransaction(response.MerchantRequestID);
+  // const [response, setResponse] = useState<MpesaResponseType>({
+  //   CheckoutRequestID: "",
+  //   CustomerMessage: "",
+  //   MerchantRequestID: "",
+  //   ResponseCode: "",
+  //   ResponseDescription: "",
+  // });
 
-  console.log(response, "response");
-
-  console.log(transactionStatus, "transactionStatus");
+  // const transactionStatus = useMpesaTransaction(response.MerchantRequestID);
 
   const totalAmount = allItems?.reduce(
     (total, item) =>
@@ -75,15 +77,22 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
           response.ResponseDescription ==
           "Success. Request accepted for processing"
         ) {
-          closeModal();
+          try {
+            const complete_sale_response = completeSaleRequest({ ...allItems });
+            console.log(complete_sale_response, "complete_sale_response");
+          } catch (error) {
+            console.log(error);
+          } finally {
+            closeModal();
+          }
           // dispatch(removeAllItems());
-          setResponse({
-            CheckoutRequestID: response.CheckoutRequestID || "",
-            CustomerMessage: response.CustomerMessage || "",
-            MerchantRequestID: response.MerchantRequestID || "",
-            ResponseCode: response.ResponseCode || "",
-            ResponseDescription: response.ResponseDescription || "",
-          });
+          // setResponse({
+          //   CheckoutRequestID: response.CheckoutRequestID || "",
+          //   CustomerMessage: response.CustomerMessage || "",
+          //   MerchantRequestID: response.MerchantRequestID || "",
+          //   ResponseCode: response.ResponseCode || "",
+          //   ResponseDescription: response.ResponseDescription || "",
+          // });
         }
       } catch (error) {
         console.log(error);
@@ -173,7 +182,9 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
         <GlobalCloseButton closeModal={closeModal}>close</GlobalCloseButton>
         <GlobalSubmitButton handleSubmit={handlePaymentRequests}>
           <span>Request payment</span>
-          {isLoading && <CircularProgress size="md" color="inherit" />}
+          {(isLoading || loading_complete_sale) && (
+            <CircularProgress size="md" color="inherit" />
+          )}
         </GlobalSubmitButton>
       </div>
     </div>

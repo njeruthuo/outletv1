@@ -61,10 +61,11 @@ export const salesAPI = createApi({
     // Initiate stock and profit calculation.
     completeSaleRequest: builder.mutation({
       query: (values) => ({
-        url: "external/complete-purchase-calculations/",
+        url: "shop/complete-purchase-calculations/",
         method: "POST",
         body: values,
       }),
+      invalidatesTags: ["Sales"],
     }),
   }),
 });
