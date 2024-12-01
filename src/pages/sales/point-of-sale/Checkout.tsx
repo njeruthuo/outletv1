@@ -78,7 +78,11 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
           "Success. Request accepted for processing"
         ) {
           try {
-            const complete_sale_response = completeSaleRequest({ ...allItems });
+            const complete_sale_response = completeSaleRequest({
+              ...allItems,
+              payeeNumber,
+              receipt_ID: response.MerchantRequestID,
+            });
             console.log(complete_sale_response, "complete_sale_response");
           } catch (error) {
             console.log(error);

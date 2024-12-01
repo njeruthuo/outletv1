@@ -1,6 +1,7 @@
 import { baseURL } from "@/lib/constants/GlobalURL";
 import { RootState } from "@/store/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { stockApi } from "../stock";
 
 export const salesAPI = createApi({
   reducerPath: "salesAPI",
@@ -66,6 +67,14 @@ export const salesAPI = createApi({
         body: values,
       }),
       invalidatesTags: ["Sales"],
+      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        try {
+          await queryFulfilled;
+          dispatch(stockApi.util.invalidateTags(["Stock"]));
+        } catch (error) {
+          console.error("Error disbursing stock: ", error);
+        }
+      },
     }),
   }),
 });
