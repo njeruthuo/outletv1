@@ -66,7 +66,14 @@ export const saleSlice = createSlice({
       );
 
       if (itemToAdd) {
-        itemToAdd.quantity += 1;
+        // Check if the current quantity is less than the available stock quantity
+        if (itemToAdd.quantity < itemToAdd.stock.quantity) {
+          itemToAdd.quantity += 1;
+        } else {
+          console.warn(
+            `Cannot add more of ${itemToAdd.stock.product.name}. Stock limit reached!`
+          );
+        }
       }
     },
   },

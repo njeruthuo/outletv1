@@ -2,9 +2,9 @@ import { Button, CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
 import {
+  removeAllItems,
   removeItem,
   selectAllCounterItems,
-  // removeAllItems,
 } from "@/features/sales/saleSlice";
 import { useState } from "react";
 import {
@@ -89,7 +89,7 @@ const Checkout = ({ closeModal }: CheckoutProps) => {
           } finally {
             closeModal();
           }
-          // dispatch(removeAllItems());
+          dispatch(removeAllItems());
           // setResponse({
           //   CheckoutRequestID: response.CheckoutRequestID || "",
           //   CustomerMessage: response.CustomerMessage || "",
