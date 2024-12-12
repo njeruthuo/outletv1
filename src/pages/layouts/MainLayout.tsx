@@ -1,19 +1,14 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { RootState } from "@/store/store";
 import { Sidebar } from "@/components/custom";
-import { Switch } from "@/components/ui/switch";
-import { toggleSalesMode } from "../auth/reducers/AuthSlice";
-import GlobalPopOver from "@/components/reusable/GlobalPopOver";
-import ProfileInfoPop from "@/components/reusable/popups/ProfileInfoPop";
+import { LeftSection } from "@/components/MainLayoutComponents";
 
 const MainLayout = () => {
   const location = useLocation();
-  const dispatch = useDispatch();
 
-  const switchMode = () => dispatch(toggleSalesMode());
   const auth = useSelector((state: RootState) => state.auth);
 
   const [showSideMenu, setShowSideMenu] = useState<boolean>(true);
@@ -45,35 +40,8 @@ const MainLayout = () => {
                     : "Dashboard"}
                 </span>
 
-                <div className="mr-3 ml-auto flex gap-4">
-                  {location.pathname.toString().includes("sales") &&
-                    auth.access_level !== "Employee" && (
-                      <div>
-                        <div className=" flex gap-2 place-items-center">
-                          <span>Sales Mode</span>
-                          <Switch
-                            style={{
-                              backgroundColor: auth.salesMode
-                                ? "#00AF54"
-                                : "#905C3F",
-                            }}
-                            checked={auth.salesMode}
-                            onCheckedChange={switchMode}
-                          />{" "}
-                        </div>
-                      </div>
-                    )}
-
-                  <div className="hover:cursor-pointer">
-                    <GlobalPopOver
-                      children={<ProfileInfoPop />}
-                      trigger={
-                        <img src="/account_circle.svg" className="h-6" alt="" />
-                      }
-                      contentClassName="w-full"
-                    />
-                  </div>
-                </div>
+                {/* Here */}
+                <LeftSection />
               </div>
               <Outlet />
             </div>
