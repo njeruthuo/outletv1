@@ -14,7 +14,7 @@ const NotificationCard: React.FC<{ notification: NotificationType }> = ({
     notification.notification_status == "READ" ? "bg-gray-200" : "bg-gray-300"
   } rounded-md`;
 
-  // console.log(notification, "notification");
+  console.log(notification, "notification");
 
   const changeNotificationStatus = async (arg: number) => {
     try {
@@ -32,8 +32,8 @@ const NotificationCard: React.FC<{ notification: NotificationType }> = ({
         </div>
       )}
       <p className="mx-2">
-        {notification.sender ? (
-          <>Shop {notification.notification_type}</>
+        {notification.sender_shop ? (
+          <>Shop {notification.notification_type.toLowerCase()}</>
         ) : (
           <>Central {notification.notification_type.toLowerCase()}</>
         )}

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { formSchema } from "./schemas/SignInSchema";
-import { useLoginMutation } from "../reducers/login";
+import { useLoginMutation } from "../../../features/auth/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,

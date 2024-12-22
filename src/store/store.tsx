@@ -2,15 +2,17 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import StockReducer from "@/features/stock/stockSlice";
-import AuthReducer from "@/pages/auth/reducers/AuthSlice";
-
-import { salesAPI } from "@/features/sales/salesAPI";
-import { authApi } from "@/pages/auth/reducers/login";
-import saleSliceReducer from "@/features/sales/saleSlice";
 
 import { brandAPI, categoryAPI, stockApi } from "@/features/stock";
 import { darajaAPI } from "@/features/sales/daraja/authorization";
-import { notificationsApi } from "@/features/notifications";
+import {
+  authApi,
+  AuthReducer,
+  dashboardApi,
+  notificationsApi,
+  salesAPI,
+  saleSliceReducer,
+} from "@/features";
 
 export const store = configureStore({
   reducer: {
@@ -29,17 +31,21 @@ export const store = configureStore({
 
     saleReducer: saleSliceReducer,
     [salesAPI.reducerPath]: salesAPI.reducer,
+
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(authApi.middleware)
-      .concat(categoryAPI.middleware)
-      .concat(brandAPI.middleware)
-      .concat(salesAPI.middleware)
-      .concat(stockApi.middleware)
-      .concat(darajaAPI.middleware)
-      .concat(notificationsApi.middleware),
+    getDefaultMiddleware().concat([
+      authApi.middleware,
+      categoryAPI.middleware,
+      brandAPI.middleware,
+      salesAPI.middleware,
+      stockApi.middleware,
+      darajaAPI.middleware,
+      notificationsApi.middleware,
+      dashboardApi.middleware,
+    ]),
 });
 
 setupListeners(store.dispatch);

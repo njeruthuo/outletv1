@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GlobalSwitch } from "../switch";
 import { useDispatch } from "react-redux";
-import { logout } from "@/pages/auth/reducers/AuthSlice";
+import { logout } from "@/features/auth/AuthSlice";
 
 const ProfileInfoPop = () => {
   const dispatch = useDispatch();

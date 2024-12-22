@@ -1,11 +1,11 @@
 import { AccessLevelEvaluator } from "@/utils/rank";
 import { createSlice } from "@reduxjs/toolkit";
-import { InitialState } from "../types";
-import { authApi } from "./login";
+import { InitialState } from "../../pages/auth/types";
+import { authApi } from "./authApi";
 // import { RootState } from "@/store/store";
 
 const initialState: InitialState = {
-  isLoggedIn: localStorage.getItem("authToken") !== "",
+  isLoggedIn: !!localStorage.getItem("authToken"),
   token: localStorage.getItem("authToken") || "",
   salesMode: false,
   access_level: AccessLevelEvaluator(),

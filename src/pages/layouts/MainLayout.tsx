@@ -14,6 +14,8 @@ const MainLayout = () => {
   const [showSideMenu, setShowSideMenu] = useState<boolean>(true);
   const hideMenu = () => setShowSideMenu((prev: boolean) => !prev);
 
+  // console.log(localStorage.getItem("authToken"), "logged in");
+
   return (
     <div className="flex h-screen w-full place-items-center">
       {auth.isLoggedIn ? (
@@ -34,7 +36,7 @@ const MainLayout = () => {
                   alt=""
                 />
 
-                <span className=" pl-2">
+                <span className="text-2xl pl-2">
                   {location.pathname.length > 2
                     ? location.pathname.split("/")[1]
                     : "Dashboard"}

@@ -60,13 +60,13 @@ interface PieChartComponentTypes {
   summaryDescription?: string;
 }
 
-const data = [
+const dummy_data = [
   { label: "Completed", value: 400, color: "#0088FE" },
   { label: "Pending", value: 300, color: "#00C49F" },
 ];
 
 export function PieChartComponent({
-  // data,
+  data,
   title,
   titleDescription,
   centerLabel,
@@ -74,8 +74,11 @@ export function PieChartComponent({
   summaryHeader,
 }: PieChartComponentTypes) {
   const totalCount = React.useMemo(() => {
-    return data.reduce((acc, curr) => acc + curr.value, 0);
-  }, []);
+    if (data) return data.reduce((acc, curr) => acc + curr.value, 0);
+    return dummy_data.reduce((acc, curr) => acc + curr.value, 0);
+  }, [data]);
+
+  console.log(data);
 
   return (
     <Card className="flex flex-col">
@@ -131,7 +134,7 @@ export function PieChartComponent({
                   }
                 }}
               />
-              {data.map((entry, index) => (
+              {dummy_data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>

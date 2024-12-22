@@ -4,7 +4,7 @@ import { GlobalSwitch } from "../reusable/switch";
 import { useDispatch, useSelector } from "react-redux";
 import Notifications from "../reusable/popups/Notifications";
 import GlobalPopOver from "@/components/reusable/GlobalPopOver";
-import { toggleSalesMode } from "@/pages/auth/reducers/AuthSlice";
+import { toggleSalesMode } from "@/features/auth/AuthSlice";
 import ProfileInfoPop from "@/components/reusable/popups/ProfileInfoPop";
 
 const LeftSection = () => {
