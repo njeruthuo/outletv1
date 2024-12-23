@@ -4,7 +4,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { RootState } from "@/store/store";
 import { Sidebar } from "@/components/custom";
-import { LeftSection } from "@/components/MainLayoutComponents";
+import { LeftSection } from "@/components/layout components";
 
 const MainLayout = () => {
   const location = useLocation();
