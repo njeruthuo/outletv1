@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts";
 
 import {
@@ -17,17 +16,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useMemo } from "react";
 
 export const description = "A line chart with a label";
-
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
 
 const chartConfig = {
   desktop: {
@@ -40,18 +31,40 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function LineChartComponent() {
+export function LineChartComponent({
+  data,
+  title,
+  titleDescription,
+  summaryDescription,
+  summaryHeader,
+}: LineChartComponentTypes) {
+  const props_data = useMemo(() => {
+    if (data) {
+      const data_list = [];
+      for (const [key, value] of Object.entries(data)) {
+        data_list.push({ month: key, count: value });
+      }
+      // return [{ month: "January", desktop: 186, mobile: 80 }];
+      return data_list;
+    }
+  }, [data]);
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Products Turn Around Time (TAT)</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+      <CardHeader className="items-center pb-0">
+        <CardTitle>
+          {/* Products Turn Around Time (TAT) */}
+          {title}
+        </CardTitle>
+        <CardDescription>
+          {/* January - June 2024 */}
+          {titleDescription}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="h-[200px] w-full">
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={props_data}
             margin={{
               top: 20,
               left: 12,
@@ -71,7 +84,7 @@ export function LineChartComponent() {
               content={<ChartTooltipContent indicator="line" />}
             />
             <Line
-              dataKey="desktop"
+              dataKey="count"
               type="natural"
               stroke="var(--color-desktop)"
               strokeWidth={2}
@@ -94,12 +107,27 @@ export function LineChartComponent() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          {/* Trending up by 5.2% this month <TrendingUp className="h-4 w-4" /> */}
+          {summaryHeader}
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          {/* Showing total visitors for the last 6 months */}
+          {summaryDescription}
         </div>
       </CardFooter>
     </Card>
   );
 }
+
+interface LineChartComponentTypes {
+  data?: Data[];
+  title?: string;
+  titleDescription?: string;
+  summaryHeader?: string;
+  summaryDescription?: string;
+}
+type Data = {
+  label: string;
+  value: number;
+  color?: string;
+};

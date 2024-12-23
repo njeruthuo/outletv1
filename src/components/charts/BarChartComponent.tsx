@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -47,7 +46,7 @@ export function BarChartComponent({
 }: BarChartComponentTypes) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="items-center pb-0">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{titleDescription}</CardDescription>
       </CardHeader>
@@ -72,7 +71,7 @@ export function BarChartComponent({
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          {summaryHeader} {summaryHeader && <TrendingUp className="h-4 w-4" />}
+          {summaryHeader}
         </div>
         <div className="leading-none text-muted-foreground">
           {summaryDescription}

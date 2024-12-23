@@ -21,7 +21,13 @@ export const dashboardApi = createApi({
       query: () => `shop/shop_stock_disbursement_api_view/`,
       providesTags: ["Stock disbursements"],
     }),
+
+    getTransactionLogs: builder.query({
+      query: () => `external/transaction_logs_api_view/`,
+      providesTags: ["Stock disbursements"],
+    }),
   }),
 });
 
-export const { useGetStockDisbursementsQuery } = dashboardApi;
+export const { useGetStockDisbursementsQuery, useGetTransactionLogsQuery } =
+  dashboardApi;

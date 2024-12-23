@@ -9,8 +9,6 @@ const StockDisbursement = () => {
     isError,
   } = useGetStockDisbursementsQuery([]);
 
-  // console.log(StockDisbursements);
-
   const prop_data = useMemo(() => {
     return [
       {
@@ -18,7 +16,11 @@ const StockDisbursement = () => {
         value: StockDisbursements?.completed,
         color: "#0088FE",
       },
-      { label: "Pending", value: StockDisbursements?.pending, color: "#00C49F" },
+      {
+        label: "Pending",
+        value: StockDisbursements?.pending,
+        color: "#00C49F",
+      },
     ];
   }, [StockDisbursements]);
 
