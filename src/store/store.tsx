@@ -2,14 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import StockReducer from "@/features/stock/stockSlice";
-
-import { brandAPI, categoryAPI, stockApi } from "@/features/stock";
 import { darajaAPI } from "@/features/sales/daraja/authorization";
+import { brandAPI, categoryAPI, stockApi } from "@/features/stock";
 import {
   authApi,
   AuthReducer,
   dashboardApi,
   notificationsApi,
+  reportApi,
   salesAPI,
   saleSliceReducer,
 } from "@/features";
@@ -17,7 +17,6 @@ import {
 export const store = configureStore({
   reducer: {
     [darajaAPI.reducerPath]: darajaAPI.reducer,
-
     [notificationsApi.reducerPath]: notificationsApi.reducer,
 
     auth: AuthReducer,
@@ -33,6 +32,7 @@ export const store = configureStore({
     [salesAPI.reducerPath]: salesAPI.reducer,
 
     [dashboardApi.reducerPath]: dashboardApi.reducer,
+    [reportApi.reducerPath]: reportApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -45,6 +45,7 @@ export const store = configureStore({
       darajaAPI.middleware,
       notificationsApi.middleware,
       dashboardApi.middleware,
+      reportApi.middleware,
     ]),
 });
 

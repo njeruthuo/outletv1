@@ -1,3 +1,5 @@
+import { TransactionType } from "./types";
+
 import { baseURL } from "@/lib/constants/GlobalURL";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -16,5 +18,17 @@ export const reportApi = createApi({
       return headers;
     },
   }),
-  endpoints: (builder) => ({}),
+
+  endpoints: (builder) => ({
+    getTransactionsReports: builder.query<TransactionType[], string>({
+      query: (searchParam) => ({
+        url: `report/report_api_view/`,
+        params: { query: searchParam }, // Add query parameters here
+      }),
+
+      providesTags: ["Transactions"],
+    }),
+  }),
 });
+
+export const { useGetTransactionsReportsQuery } = reportApi;
