@@ -18,8 +18,8 @@ const ReusableGrid: React.FC<ReusableTableProps> = ({
   return (
     // wrapping container with theme & size
     <div
-      className={cn("ag-theme-quartz", "w-full")} // applying the Data Grid theme
-      style={{ height: 500, width: "100%" }} // the Data Grid will fill the size of the parent container
+      className={cn("ag-theme-quartz", "w-full h-[80vh]")} // applying the Data Grid theme
+      // style={{ height: 800, width: "100%" }} // the Data Grid will fill the size of the parent container
     >
       <AgGridReact
         rowData={rows}
