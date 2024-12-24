@@ -10,6 +10,7 @@ import {
   dashboardApi,
   notificationsApi,
   reportApi,
+  reportReducer,
   salesAPI,
   saleSliceReducer,
 } from "@/features";
@@ -32,6 +33,8 @@ export const store = configureStore({
     [salesAPI.reducerPath]: salesAPI.reducer,
 
     [dashboardApi.reducerPath]: dashboardApi.reducer,
+
+    reportReducer: reportReducer,
     [reportApi.reducerPath]: reportApi.reducer,
   },
 
