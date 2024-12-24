@@ -19,7 +19,7 @@ const TransactionReportTable = () => {
         transaction_type: transaction.transaction_type,
         transaction_status: transaction.transaction_status,
         receipt_ID: transaction.receipt_ID,
-        profit: transaction.transaction_type,
+        profit: transaction.profit,
         mpesa_transaction_code: transaction.mpesa_transaction_code,
         date_created: transaction.date_created,
       }));

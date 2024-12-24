@@ -14,10 +14,13 @@ const MainLayout = () => {
   const [showSideMenu, setShowSideMenu] = useState<boolean>(true);
   const hideMenu = () => setShowSideMenu((prev: boolean) => !prev);
 
-  // console.log(localStorage.getItem("authToken"), "logged in");
+  const capitalizeFirstLetter = (arg: string) => {
+    if (!arg) return "";
+    return arg.charAt(0).toUpperCase() + arg.slice(1);
+  };
 
   return (
-    <div className="flex h-screen w-full place-items-center">
+    <div className="flex w-full h-screen content-center">
       {auth.isLoggedIn ? (
         <div className="flex-1 overflow-auto">
           <div className="flex">
@@ -38,7 +41,7 @@ const MainLayout = () => {
 
                 <span className="text-2xl pl-2">
                   {location.pathname.length > 2
-                    ? location.pathname.split("/")[1]
+                    ? capitalizeFirstLetter(location.pathname.split("/")[1])
                     : "Dashboard"}
                 </span>
 
