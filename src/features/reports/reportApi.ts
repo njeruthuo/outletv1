@@ -1,4 +1,4 @@
-import { TransactionType } from "./types";
+import { DisbursementType, TransactionType } from "./types";
 
 import { baseURL } from "@/lib/constants/GlobalURL";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -28,7 +28,19 @@ export const reportApi = createApi({
 
       providesTags: ["Transactions"],
     }),
+
+    getDisbursementReports: builder.query<DisbursementType[], string>({
+      query: (searchParam) => ({
+        url: `report/report_api_view/`,
+        params: { query: searchParam }, // Add query parameters here
+      }),
+
+      providesTags: ["Disbursements"],
+    }),
   }),
 });
 
-export const { useGetTransactionsReportsQuery } = reportApi;
+export const {
+  useGetTransactionsReportsQuery,
+  useGetDisbursementReportsQuery,
+} = reportApi;

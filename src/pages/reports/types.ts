@@ -1,6 +1,6 @@
 import { formatDate } from "@/utils/date";
 
-export type TransactionTableTypes = {
+export type ColTypes = {
   headerName: string;
   flex: number;
   field: string;
@@ -10,8 +10,7 @@ export type TransactionTableTypes = {
 
 export type ReportType = "Sales" | "Transactions" | "Disbursements";
 
-
-export const TransactionColDefs: TransactionTableTypes[] = [
+export const TransactionColDefs: ColTypes[] = [
   {
     headerName: "Shop",
     flex: 1,
@@ -64,5 +63,42 @@ export const TransactionColDefs: TransactionTableTypes[] = [
       const p = arg as { value: Date };
       return formatDate(p.value);
     },
+  },
+];
+
+export const DisbursementTypes: ColTypes[] = [
+  {
+    headerName: "Disbursed By",
+    flex: 1,
+    field: "disbursed_by",
+  },
+  {
+    headerName: "Product Disbursed",
+    flex: 1,
+    field: "product",
+  },
+  {
+    headerName: "Shop",
+    flex: 1,
+    field: "shop",
+  },
+  {
+    headerName: "Quantity",
+    flex: 1,
+    field: "disbursement_quantity",
+  },
+  {
+    headerName: "Disbursement Date",
+    flex: 1,
+    field: "timestamp",
+    valueFormatter: (arg: unknown) => {
+      const p = arg as { value: Date };
+      return formatDate(p.value);
+    },
+  },
+  {
+    headerName: "status",
+    flex: 1,
+    field: "status",
   },
 ];

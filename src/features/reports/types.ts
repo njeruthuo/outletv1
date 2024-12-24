@@ -13,5 +13,13 @@ export type TransactionType = {
   user: { email: string };
 };
 
-export type DisbursementType = { name: string };
+export type DisbursementType = {
+  disburse_quantity: number;
+  disbursed_by: string;
+  id: number;
+  product: { name: string };
+  shop: { branch_name: string };
+  status: string;
+  timestamp: string;
+};
 export type SalesType = { name: string };
