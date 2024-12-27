@@ -36,7 +36,23 @@
 
  */
 
+import { PasswordChangeForm } from "@/components/settings";
+
 const Settings = () => {
-  return <div>Settings</div>;
+  return (
+    <div className={containerStyles}>
+      <div className={items}>
+        <PasswordChangeForm />
+      </div>
+      <div className={items}>Item 2</div>
+      <div className={items}>Item 3</div>
+      <div className={items}>Item 4</div>
+      <div className={items}>Item 5</div>
+      <div className={items}>Item 6</div>
+    </div>
+  );
 };
 export default Settings;
+
+const containerStyles = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4";
+const items = "border rounded-lg p-4 text-center shadow-md bg-[#FAFAFF]";
