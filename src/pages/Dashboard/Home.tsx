@@ -1,4 +1,3 @@
-import { Box, Grid } from "@mui/material";
 import {
   SalesPerTimeRange,
   StockDisbursement,
@@ -8,25 +7,14 @@ import {
 const Home = () => {
   return (
     <section className="w-full mt-4">
-      <div className="product-availability">
-        <Box sx={{ flexGrow: 1 }}>
-          <div>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <StockLevels />
-              </Grid>
-              <Grid item xs={4}>
-                <StockDisbursement />
-              </Grid>
-              <Grid item xs={4}>
-                <SalesPerTimeRange />
-              </Grid>
-            </Grid>
-          </div>
-        </Box>
+      <div className={containerStyles}>
+        <StockLevels />
+        <StockDisbursement />
+        <SalesPerTimeRange />
       </div>
     </section>
   );
 };
 
 export default Home;
+const containerStyles = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4";

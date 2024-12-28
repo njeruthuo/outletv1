@@ -22,11 +22,21 @@ const MainLayout = () => {
   return (
     <div className="flex w-full h-screen content-center">
       {auth.isLoggedIn ? (
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto relative">
           <div className="flex">
             {showSideMenu && (
-              <div className="w-72 bg-custom1 h-screen text-white">
+              <div className="hidden sm:block sm:w-72 bg-custom1 h-screen text-white">
                 <Sidebar />
+              </div>
+            )}
+
+            {showSideMenu && (
+              <div
+                style={{ zIndex: 9999, height: "100vh" }}
+                // className="fixed top-0 z-1500 w-72 bg-custom1 h-screen text-white"
+                className="fixed sm:hidden top-0 left-0 w-72 h-screen bg-custom1 text-white"
+              >
+                <Sidebar show={showSideMenu} toggle={hideMenu} />
               </div>
             )}
 

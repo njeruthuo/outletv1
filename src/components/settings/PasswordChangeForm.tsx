@@ -10,9 +10,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { GlobalSubmitButton } from "../reusable";
-import { StyledInput } from "../custom/custom-components";
 import { useChangePasswordMutation } from "@/features/auth/authApi";
+import { StyledInput } from "../custom/custom-components";
+import { GlobalSubmitButton } from "../reusable";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
