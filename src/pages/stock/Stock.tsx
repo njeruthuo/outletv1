@@ -113,6 +113,8 @@ const Stock = () => {
     },
   ]);
 
+  console.log(setColDefs, "setColDefs");
+
   const rows = useMemo(() => {
     return data?.map((item: StockItem) => ({
       id: item.id,

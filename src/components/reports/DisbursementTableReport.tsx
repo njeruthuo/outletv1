@@ -34,7 +34,9 @@ const DisbursementsTable = () => {
 
   return (
     <>
-      <ReusableGrid colsDefs={DisbursementTypes} rows={rowsData} />
+      {rowsData && DisbursementTypes && (
+        <ReusableGrid colsDefs={DisbursementTypes} rows={rowsData} />
+      )}
     </>
   );
 };

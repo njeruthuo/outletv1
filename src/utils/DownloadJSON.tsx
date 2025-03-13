@@ -1,4 +1,10 @@
-const DownloadJSON = ({ data, fileName }) => {
+const DownloadJSON = ({
+  data,
+  fileName,
+}: {
+  data: unknown[];
+  fileName: string;
+}) => {
   const downloadJSON = () => {
     const jsonData = new Blob([JSON.stringify(data)], {
       type: "application/json",

@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CircularProgress } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddShopMutation } from "@/features/sales/salesAPI";
-import { AddShopFormSchema, AddShopProps } from "@/lib/types/sales/ShopType";
+import { AddShopFormSchema } from "@/lib/types/sales/ShopType";
 
 import {
   Form,
@@ -16,9 +16,14 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
+import { GlobalSubmitButton } from "@/components/reusable";
 
-const AddShopForm: React.FC<AddShopProps> = ({ closeModal }) => {
+const AddShopForm = ({
+  closeModal,
+}: {
+  closeModal?: (arg?: unknown) => void;
+}) => {
+  console.log(closeModal);
   /***
    *
    * In sales management Admin view, we need to see the list of all shops.
@@ -66,16 +71,16 @@ const AddShopForm: React.FC<AddShopProps> = ({ closeModal }) => {
       });
       console.error("Failed to add shop:", error);
     } finally {
-      closeModal();
+      // closeModal();
     }
   }
   return (
     <>
-      <>
+      <section className="text-left">
         <Form {...form}>
-          <h2 className="text-xl font-bold my-1">Add New Shop</h2>
+          <h2 className="text-xl font-bold my-1 text-left">Add New Shop</h2>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3">
               <FormField
                 control={form.control}
                 name="branch_name"
@@ -131,9 +136,9 @@ const AddShopForm: React.FC<AddShopProps> = ({ closeModal }) => {
             </div>
 
             <div className="flex justify-end">
-              <GlobalCloseButton closeModal={() => closeModal()}>
+              {/* <GlobalCloseButton closeModal={() => closeModal()}>
                 <span>Close</span>
-              </GlobalCloseButton>
+              </GlobalCloseButton> */}
               <GlobalSubmitButton>
                 {isLoading && <CircularProgress size="md" color="inherit" />}
                 <span>Add Shop</span>
@@ -141,7 +146,7 @@ const AddShopForm: React.FC<AddShopProps> = ({ closeModal }) => {
             </div>
           </form>
         </Form>
-      </>
+      </section>
     </>
   );
 };

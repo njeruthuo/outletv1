@@ -1,11 +1,13 @@
 import { cn } from "@/lib/utils";
-import { ICellRendererParams } from "ag-grid-community";
-import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
+import { AgGridReact } from "ag-grid-react";
+import { ColDef, RowClickedEvent } from "ag-grid-community";
+
+
 
 interface ReusableTableProps {
-  rows: unknown;
-  colsDefs: unknown;
-  onRowClick?: unknown;
+  rows: unknown[];
+  colsDefs: ColDef[];
+  onRowClick?: (event: RowClickedEvent) => void;
 }
 
 const ReusableGrid: React.FC<ReusableTableProps> = ({
@@ -13,14 +15,8 @@ const ReusableGrid: React.FC<ReusableTableProps> = ({
   colsDefs,
   onRowClick,
 }) => {
-  // Column Definitions: Defines the columns to be displayed.
-
   return (
-    // wrapping container with theme & size
-    <div
-      className={cn("ag-theme-quartz", "w-full h-[80vh]")} // applying the Data Grid theme
-      // style={{ height: 800, width: "100%" }} // the Data Grid will fill the size of the parent container
-    >
+    <div className={cn("ag-theme-quartz", "w-full h-[80vh]")}>
       <AgGridReact
         rowData={rows}
         columnDefs={colsDefs}
@@ -29,4 +25,5 @@ const ReusableGrid: React.FC<ReusableTableProps> = ({
     </div>
   );
 };
+
 export default ReusableGrid;

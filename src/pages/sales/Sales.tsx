@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ShopInfo from "@/components/custom/ShopInfo";
 import { AddEmployeeForm } from "@/components/forms";
-import { ICellRendererParams } from "ag-grid-community";
+import { RowClickedEvent } from "ag-grid-community";
 import AddShopForm from "@/components/forms/sales/AddShopForm";
 import { GlobalModal, ReusableGrid } from "@/components/reusable";
 import { useGetShopListQuery } from "@/features/sales/salesAPI";
@@ -19,7 +19,7 @@ const Sales = () => {
   const [infoModalData, setInfoModalData] = useState();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [colDefs, setColDefs] = useState<ShopColumn[]>([
+  const [colDefs] = useState<ShopColumn[]>([
     { field: "branch_name", flex: 1, headerName: "Branch Name" },
     { field: "location", flex: 1 },
     { field: "opening_date", flex: 1, headerName: "Opening Date" },
@@ -43,9 +43,9 @@ const Sales = () => {
     }));
   }, [ShopList]);
 
-  const onRowClick = (params: ICellRendererParams) => {
-    setOpenInfoModal((prev: boolean) => !prev);
-    setInfoModalData(params.data);
+  const onRowClick = (event: RowClickedEvent<any, any>) => {
+    setOpenInfoModal((prev) => !prev);
+    setInfoModalData(event.data);
   };
 
   return (

@@ -19,7 +19,7 @@ const useStockTableColDefs = ({
       field: "info",
       flex: 1,
       headerName: "",
-      cellRendererFramework: CustomButtonComponent, // Note the change here
+      cellRenderer: CustomButtonComponent, // Note the change here
     },
   ]);
   return { colDefs, setColDefs };

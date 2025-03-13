@@ -63,6 +63,7 @@ export const stockApi = createApi({
       }),
       invalidatesTags: ["Stock"],
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        console.log(arg);
         try {
           // Wait for the disbursement to complete
           await queryFulfilled;

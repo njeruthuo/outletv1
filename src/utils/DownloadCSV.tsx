@@ -1,13 +1,12 @@
-const DownloadCSV = ({ data, fileName }) => {
-  
-  const convertToCSV = (objArray) => {
+const DownloadCSV = ({ data, fileName }: { data: unknown[]; fileName: string }) => {
+  const convertToCSV = (objArray: unknown[]) => {
     const array =
       typeof objArray !== "object" ? JSON.parse(objArray) : objArray;
     let str = "";
 
     for (let i = 0; i < array.length; i++) {
       let line = "";
-      for (let index in array[i]) {
+      for (const index in array[i]) {
         if (line !== "") line += ",";
 
         line += array[i][index];

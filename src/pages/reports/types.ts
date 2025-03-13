@@ -1,4 +1,5 @@
 import { formatDate } from "@/utils/date";
+import { ColDef } from "ag-grid-community";
 
 export type ColTypes = {
   headerName: string;
@@ -10,7 +11,7 @@ export type ColTypes = {
 
 export type ReportType = "Sales" | "Transactions" | "Disbursements";
 
-export const TransactionColDefs: ColTypes[] = [
+export const TransactionColDefs: ColDef<any, any>[] = [
   {
     headerName: "Shop",
     flex: 1,
@@ -66,7 +67,8 @@ export const TransactionColDefs: ColTypes[] = [
   },
 ];
 
-export const DisbursementTypes: ColTypes[] = [
+
+export const DisbursementTypes: ColDef<any, any>[] = [
   {
     headerName: "Disbursed By",
     flex: 1,
@@ -91,10 +93,11 @@ export const DisbursementTypes: ColTypes[] = [
     headerName: "Disbursement Date",
     flex: 1,
     field: "timestamp",
-    valueFormatter: (arg: unknown) => {
-      const p = arg as { value: Date };
-      return formatDate(p.value);
-    },
+    // valueFormatter: (arg: unknown) => {
+    //   const p = arg as { value: Date };
+    //   return formatDate(p.value);
+    // },
+    valueFormatter: (params) => String(params.value),
   },
   {
     headerName: "status",

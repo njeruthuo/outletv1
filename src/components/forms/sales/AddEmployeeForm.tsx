@@ -1,12 +1,11 @@
 import { z } from "zod";
-// import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShopType } from "@/lib/types/sales/ShopType";
 import { useFetchShops } from "@/hooks/custom/useShops";
-import { AddEmployeeFormProps, formSchema } from "@/lib/types/sales/shopInfo";
-import { GlobalCloseButton, GlobalSubmitButton } from "@/components/reusable";
+import { formSchema } from "@/lib/types/sales/shopInfo";
+import { GlobalSubmitButton } from "@/components/reusable";
 
 import {
   Select,
@@ -28,10 +27,16 @@ import { CircularProgress } from "@mui/material";
 import { useAddEmployeeMutation } from "@/features/sales/salesAPI";
 import useToasters from "@/components/reusable/toasted/useToasters";
 
-const AddEmployeeForm = ({ closeModal }: AddEmployeeFormProps) => {
+const AddEmployeeForm = ({
+  closeModal
+}: {
+  closeModal?: (arg?: unknown) => void;
+}) => {
   const { failed, success } = useToasters();
   const { shops, isLoading } = useFetchShops();
   const [addEmployee] = useAddEmployeeMutation();
+
+  console.log(closeModal);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -56,13 +61,20 @@ const AddEmployeeForm = ({ closeModal }: AddEmployeeFormProps) => {
       console.log(error);
       failed("There was an error processing that request! Please try again.");
     } finally {
-      closeModal();
+      // closeModal();
     }
     // console.log(values);
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-left">
+      <div className="">
+        <h2 className="text-2xl">Add an Employee</h2>
+        <p className="text-sm mb-2 mt-1">
+          Please fill this form to add an employee
+        </p>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -141,7 +153,7 @@ const AddEmployeeForm = ({ closeModal }: AddEmployeeFormProps) => {
           />
 
           <div className="flex justify-end space-x-2">
-            <GlobalCloseButton closeModal={closeModal}>Close</GlobalCloseButton>
+            {/* <GlobalCloseButton closeModal={closeModal}>Close</GlobalCloseButton> */}
             <GlobalSubmitButton>
               {isLoading && <CircularProgress size="md" color="inherit" />}
               <span>Submit</span>

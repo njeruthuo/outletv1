@@ -68,6 +68,7 @@ export const salesAPI = createApi({
       }),
       invalidatesTags: ["Sales"],
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+        console.log(arg);
         try {
           await queryFulfilled;
           dispatch(stockApi.util.invalidateTags(["Stock"]));

@@ -54,7 +54,7 @@ type Data = {
 interface PieChartComponentTypes {
   data?: Data[];
   title?: string;
-  centerLabel: string;
+  centerLabel?: string;
   titleDescription?: string;
   summaryHeader?: string;
   summaryDescription?: string;

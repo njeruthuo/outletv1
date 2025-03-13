@@ -36,6 +36,8 @@
 
  */
 
+import { AddEmployeeForm } from "@/components/forms";
+import AddShopForm from "@/components/forms/sales/AddShopForm";
 import { PasswordChangeForm } from "@/components/settings";
 
 const Settings = () => {
@@ -44,11 +46,15 @@ const Settings = () => {
       <div className={items}>
         <PasswordChangeForm />
       </div>
-      <div className={items}>Item 2</div>
-      <div className={items}>Item 3</div>
-      <div className={items}>Item 4</div>
+      <div className={items}>
+        <AddEmployeeForm />
+      </div>
+      <div className={items}>
+        <AddShopForm />
+      </div>
+      {/* <div className={items}></div>
       <div className={items}>Item 5</div>
-      <div className={items}>Item 6</div>
+      <div className={items}>Item 6</div> */}
     </div>
   );
 };
